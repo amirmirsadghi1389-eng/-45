@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>بانک اطلاعات خودروها</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Vazirmatn -->
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        benz: { DEFAULT: '#00A3E0', dark: '#005885' },
+                        bmw: { DEFAULT: '#1C69D2', dark: '#0D3875' },
+                        toyota: { DEFAULT: '#EB0A1E', dark: '#8C000B' },
+                        ikco: { DEFAULT: '#1d4ed8', dark: '#1e3a8a' },
+                        saipa: { DEFAULT: '#ea580c', dark: '#9a3412' }
+                    },
+                    fontFamily: {
+                        sans: ['Vazirmatn', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen transition-colors duration-300 flex justify-center">
+
+    <!-- Mobile Frame Container -->
+    <div class="w-full max-w-md bg-gray-900 min-h-screen shadow-2xl flex flex-col justify-between relative overflow-hidden transition-all duration-300 border-x border-gray-800">
+        
+        <!-- Top App Bar -->
+        <header class="sticky top-0 z-40 bg-gray-900/90 backdrop-blur-md border-b border-gray-800 px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <button id="btn-back" onclick="goBack()" class="hidden w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-200 hover:bg-gray-700 active:scale-95 transition">
+                    <i class="fa-solid font-bold fa-arrow-right"></i>
+                </button>
+                <h1 id="header-title" class="font-bold text-base sm:text-lg text-white flex items-center gap-2">
+                    <i class="fa-solid fa-car-side text-blue-500"></i>
+                    بانک جامع اطلاعات خودرو
+                </h1>
+            </div>
+            
+            <button onclick="toggleDarkMode()" class="w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center text-gray-200 hover:bg-gray-700 transition">
+                <i id="theme-icon" class="fa-solid fa-moon"></i>
+            </button>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-y-auto no-scrollbar p-4 relative" id="main-content">
+
+            <!-- STEP 1: COMPANY SELECTION -->
+            <section id="step-companies" class="space-y-4 pt-2 animate-fade-in">
+                <div class="text-center space-y-1 mb-4">
+                    <h2 class="text-xl font-extrabold text-white">انتخاب شرکت خودروسازی</h2>
+                    <p class="text-xs text-gray-400">برای مشاهده اطلاعات، برند مورد نظر را انتخاب کنید</p>
+                </div>
+
+                <div class="grid grid-cols-1 gap-3">
+                    <!-- BENZ Card -->
+                    <div onclick="selectCompany('benz')" class="group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-r from-gray-800 to-gray-950 p-5 shadow-lg border border-gray-700 hover:border-cyan-500 transition-all duration-300">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <span class="bg-cyan-500/20 text-cyan-300 text-[11px] px-2.5 py-0.5 rounded-full border border-cyan-500/30 font-medium">آلمان</span>
+                                <h3 class="text-xl font-bold mt-1 text-white">مرسدس بنز (Mercedes-Benz)</h3>
+                                <p class="text-xs text-gray-400 mt-1">A-Class, S-Class, AMG, EQ, Maybach و...</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-gray-800/80 flex items-center justify-center border border-gray-600 text-2xl text-cyan-400">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BMW Card -->
+                    <div onclick="selectCompany('bmw')" class="group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-950 to-gray-900 p-5 shadow-lg border border-blue-900/60 hover:border-blue-500 transition-all duration-300">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <span class="bg-blue-500/20 text-blue-300 text-[11px] px-2.5 py-0.5 rounded-full border border-blue-500/30 font-medium">آلمان</span>
+                                <h3 class="text-xl font-bold mt-1 text-white">بی‌ام‌و (BMW)</h3>
+                                <p class="text-xs text-gray-400 mt-1">سری ۱ تا ۸، X1 تا X7، سری M و i</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-900/40 flex items-center justify-center border border-blue-700/50 text-2xl text-blue-400">
+                                <i class="fa-solid fa-circle-dot"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TOYOTA Card -->
+                    <div onclick="selectCompany('toyota')" class="group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-r from-red-950 to-gray-900 p-5 shadow-lg border border-red-900/60 hover:border-red-500 transition-all duration-300">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <span class="bg-red-500/20 text-red-300 text-[11px] px-2.5 py-0.5 rounded-full border border-red-500/30 font-medium">ژاپن</span>
+                                <h3 class="text-xl font-bold mt-1 text-white">تویوتا (Toyota)</h3>
+                                <p class="text-xs text-gray-400 mt-1">Camry, Corolla, Land Cruiser, GR Supra...</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-red-900/40 flex items-center justify-center border border-red-700/50 text-2xl text-red-400">
+                                <i class="fa-solid fa-gem"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- IKCO Card -->
+                    <div onclick="selectCompany('ikco')" class="group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-900 to-indigo-950 p-5 shadow-lg border border-blue-800 hover:border-blue-400 transition-all duration-300">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <span class="bg-blue-400/20 text-blue-200 text-[11px] px-2.5 py-0.5 rounded-full border border-blue-400/30 font-medium">ایران</span>
+                                <h3 class="text-xl font-bold mt-1 text-white">ایران خودرو (IKCO)</h3>
+                                <p class="text-xs text-blue-200/70 mt-1">پژو، دنا، تارا، سمند، ری‌را، هایما و...</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-800/40 flex items-center justify-center border border-blue-600/50 text-2xl text-blue-300">
+                                🚙
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SAIPA Card -->
+                    <div onclick="selectCompany('saipa')" class="group cursor-pointer relative overflow-hidden rounded-2xl bg-gradient-to-r from-orange-950 to-stone-900 p-5 shadow-lg border border-orange-900/80 hover:border-orange-500 transition-all duration-300">
+                        <div class="flex justify-between items-center relative z-10">
+                            <div>
+                                <span class="bg-orange-500/20 text-orange-300 text-[11px] px-2.5 py-0.5 rounded-full border border-orange-500/30 font-medium">ایران</span>
+                                <h3 class="text-xl font-bold mt-1 text-white">سایپا (SAIPA)</h3>
+                                <p class="text-xs text-orange-200/70 mt-1">پراید، شاهین، کوییک، ساینا، اطلس، زانتیا...</p>
+                            </div>
+                            <div class="w-12 h-12 rounded-xl bg-orange-900/40 flex items-center justify-center border border-orange-700/50 text-2xl text-orange-400">
+                                🚗
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 2: CAR LIST -->
+            <section id="step-car-list" class="hidden space-y-4 animate-fade-in">
+                <!-- Search Bar -->
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-3.5 text-gray-400 text-sm"></i>
+                    <input type="text" id="search-input" oninput="filterCars()" placeholder="جستجوی مدل خودرو..." class="w-full pl-4 pr-10 py-2.5 rounded-xl bg-gray-800 text-gray-100 text-sm border border-gray-700 focus:border-blue-500 focus:outline-none transition">
+                </div>
+
+                <!-- Company Badge Header -->
+                <div class="flex items-center justify-between pt-1">
+                    <span id="company-name-badge" class="text-xs font-bold px-3 py-1 rounded-full"></span>
+                    <span id="car-count" class="text-xs text-gray-400 font-medium"></span>
+                </div>
+
+                <!-- Cars List Grid -->
+                <div id="cars-container" class="space-y-2.5 pb-6">
+                    <!-- Dynamically Loaded Cars -->
+                </div>
+            </section>
+
+            <!-- STEP 3: CAR DETAILS VIEW -->
+            <section id="step-car-details" class="hidden space-y-4 pb-8 animate-fade-in">
+                <!-- Car Title Header Card -->
+                <div id="details-header-card" class="rounded-2xl p-5 text-white shadow-lg relative overflow-hidden">
+                    <div class="relative z-10">
+                        <span id="detail-company-tag" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-white/20 backdrop-blur-sm"></span>
+                        <h2 id="detail-car-name" class="text-2xl font-extrabold mt-1"></h2>
+                        <p id="detail-car-subtitle" class="text-xs opacity-90 mt-0.5"></p>
+                    </div>
+                </div>
+
+                <!-- New Highlight Specs (0-100 & Top Speed) -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-gradient-to-br from-amber-950/40 to-gray-800 p-3.5 rounded-xl border border-amber-500/30 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-stopwatch"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-400 block">شتاب ۰ تا ۱۰۰</span>
+                            <span id="spec-accel" class="text-sm font-extrabold text-amber-300"></span>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-red-950/40 to-gray-800 p-3.5 rounded-xl border border-red-500/30 flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center text-lg">
+                            <i class="fa-solid fa-tachometer-alt"></i>
+                        </div>
+                        <div>
+                            <span class="text-[10px] text-gray-400 block">حداکثر سرعت</span>
+                            <span id="spec-top-speed" class="text-sm font-extrabold text-red-300"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Specifications Grid -->
+                <div class="space-y-3">
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1">مشخصات موتور و فنی</h3>
+                    
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-red-900/30 text-red-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">قدرت موتور</span>
+                                <span id="spec-hp" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-900/30 text-blue-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">نام موتور / نوع</span>
+                                <span id="spec-engine-name" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-900/30 text-emerald-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-cubes"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">حجم موتور</span>
+                                <span id="spec-capacity" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-purple-900/30 text-purple-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-cogs"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">تعداد سیلندر</span>
+                                <span id="spec-cylinders" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1 pt-2">مصرف و باک</h3>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-cyan-900/30 text-cyan-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-gas-pump"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">حجم باک / باتری</span>
+                                <span id="spec-tank" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700/50 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-green-900/30 text-green-400 flex items-center justify-center text-xs">
+                                <i class="fa-solid fa-leaf"></i>
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">مصرف ترکیبی</span>
+                                <span id="spec-consumption" class="text-xs font-bold text-gray-100"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider px-1 pt-2">ارزیابی فنی و سواری</h3>
+
+                    <div class="space-y-2.5">
+                        <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-shield-halved text-red-400"></i> ایمنی و ترمز
+                                </span>
+                                <span id="spec-brakes-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-300"></span>
+                            </div>
+                            <p id="spec-brakes-desc" class="text-xs text-gray-400 leading-relaxed mt-1"></p>
+                        </div>
+
+                        <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-route text-indigo-400"></i> هندلینگ و پایداری
+                                </span>
+                                <span id="spec-handling-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-300"></span>
+                            </div>
+                            <p id="spec-handling-desc" class="text-xs text-gray-400 leading-relaxed mt-1"></p>
+                        </div>
+
+                        <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-couch text-amber-400"></i> راحتی و سواری
+                                </span>
+                                <span id="spec-comfort-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-300"></span>
+                            </div>
+                            <p id="spec-comfort-desc" class="text-xs text-gray-400 leading-relaxed mt-1"></p>
+                        </div>
+
+                        <div class="bg-gray-800/50 p-3 rounded-xl border border-gray-700/50">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-gray-200 flex items-center gap-2">
+                                    <i class="fa-solid fa-users text-teal-400"></i> فضای کابین
+                                </span>
+                                <span id="spec-space-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-gray-700 text-gray-300"></span>
+                            </div>
+                            <p id="spec-space-desc" class="text-xs text-gray-400 leading-relaxed mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Bottom Branding Bar -->
+        <footer class="py-2 text-center text-[11px] bg-gray-900 border-t border-gray-800 text-gray-400">
+            بانک اطلاعات خودروها | کامل‌ترین مرجع مشخصات فنی
+        </footer>
+    </div>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        const database = {
+            benz: [
+                { name: 'Mercedes-Benz A-Class', subtitle: 'هاچ‌بک و سدان کامپکت لوکس', hp: '163 - 421 اسب بخار', accel: '3.9 - 8.0 ثانیه', topSpeed: '225 - 270 ک‌م/س', engineName: '1.3L / 2.0L Turbo', capacity: '1332 - 1991 سی‌سی', cylinders: '4 سیلندر', tank: '43 لیتر', consumption: '6.0 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای دیسکی خنک‌شونده عالی همراه با سیستم ترمز اضطراری هوشمند.', handlingBadge: 'عالی (8/10)', handlingDesc: 'فرمان‌پذیری دقیق و پایداری مناسب در مسیرهای شهری و پیچ‌ها.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین مدرن MBUX با سیستم تعلیق نسبتا اسپرت.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'فضای مناسب برای سرنشینان جلو، فضای عقب در کلاس خود استاندار است.' },
+                { name: 'Mercedes-Benz C-Class', subtitle: 'سدان لوکس سایز متوسط', hp: '204 - 680 اسب بخار', accel: '3.4 - 7.3 ثانیه', topSpeed: '240 - 280 ک‌م/س', engineName: '2.0L Turbo Hybrid', capacity: '1999 سی‌سی', cylinders: '4 سیلندر / MHEV', tank: '66 لیتر', consumption: '6.8 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'قدرت ترمزگیری شگفت‌انگیز با دیسک‌های سوراخ‌دار.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'پایداری مثال‌زدنی و فرمان‌پذیری محور عقب در نسخه‌های سفارشی.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'کابین بی‌صدا و صندلی‌های ارگونومیک پیشرفته.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'فضای کافی و جادار برای ۴ سرنشین بزرگسال.' },
+                { name: 'Mercedes-Benz E-Class', subtitle: 'سدان نیمه‌سنگین لوکس تجاری', hp: '204 - 612 اسب بخار', accel: '3.4 - 7.5 ثانیه', topSpeed: '250 ک‌م/س (محدود)', engineName: '2.0L / 3.0L Mild-Hybrid', capacity: '1999 - 2999 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '66 لیتر', consumption: '6.4 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'سیستم‌های پیشرفته ترمز هوشمند ABS, BAS, PRE-SAFE.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'تعادل بی‌نظیر میان سواری نرم و کنترل در سرعت‌های بالا.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'سیستم تعلیق بادی AIRMATIC با سواری همانند قالیچه پرنده.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای بسیار جادار سرنشینان جلو و عقب.' },
+                { name: 'Mercedes-Benz S-Class', subtitle: 'پرچمدار خودروهای لوکس جهان', hp: '367 - 796 اسب بخار', accel: '3.3 - 5.1 ثانیه', topSpeed: '250 ک‌م/س', engineName: '3.0L Turbo / 6.0L V12', capacity: '2999 - 5980 سی‌سی', cylinders: '6 / 8 / 12 سیلندر', tank: '76 لیتر', consumption: '8.2 لیتر / 100km', brakesBadge: 'کامل‌ترین (10/10)', brakesDesc: 'پیشرفته‌ترین سیستم ترمز و ایمنی فعال دنیا.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'فرمان‌پذیری ۱۰ درجه چرخ‌های عقب و پایداری مطلق.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'بالاترین سطح راحتی، ماساژور صندلی‌ها و سکوت مطلق کابین.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'فضای لیموزین مانند برای سرنشینان عقب.' },
+                { name: 'Mercedes-Benz CLA', subtitle: 'کوپه چهاردر اسپرت و جذاب', hp: '163 - 421 اسب بخار', accel: '4.0 - 8.4 ثانیه', topSpeed: '230 - 270 ک‌م/س', engineName: '1.3L / 2.0L Turbo', capacity: '1332 - 1991 سی‌سی', cylinders: '4 سیلندر', tank: '51 لیتر', consumption: '6.2 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزگیری سریع و مطمئن.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'هندلینگ اسپرت و چسبندگی بالا به جاده.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'طراحی مدرن، سواری کمی سفت و اسپرت.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'سقف شیب‌دار فضای سر عقب را اندکی کاهش داده.' },
+                { name: 'Mercedes-Benz CLE', subtitle: 'کوپه و کانورتیبل جدید لوکس', hp: '204 - 449 اسب بخار', accel: '4.2 - 7.4 ثانیه', topSpeed: '250 ک‌م/س', engineName: '2.0L / 3.0L Turbo', capacity: '1999 - 2999 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '66 لیتر', consumption: '7.1 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای دیسکی بزرگ AMG.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'فرمان‌پذیری اسپرت و پاسخ سریع در پیچ‌ها.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'صندلی‌های یکپارچه لوکس و سیستم صوتی Burmester.', spaceBadge: 'متوسط (7/10)', spaceDesc: 'کوپه ۲+۲ با فضای مناسب جلو.' },
+                { name: 'Mercedes-Benz GLA', subtitle: 'کراس‌اور کامپکت لوکس شهری', hp: '163 - 421 اسب بخار', accel: '4.3 - 8.7 ثانیه', topSpeed: '210 - 270 ک‌م/س', engineName: '1.3L / 2.0L Turbo', capacity: '1332 - 1991 سی‌سی', cylinders: '4 سیلندر', tank: '51 لیتر', consumption: '6.7 لیتر / 100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'ترمزهای قدرتمند دیسکی با کنترل الکترونیکی.', handlingBadge: 'خوب (8/10)', handlingDesc: 'مانورپذیری عالی در ترافیک شهری.', comfortBadge: 'خوب (8/10)', comfortDesc: 'موقعیت رانندگی مرتفع و دید عالی به اطراف.', spaceBadge: 'خوب (7/10)', spaceDesc: 'فضای کابین جادارتر از هاچ‌بک‌ها.' },
+                { name: 'Mercedes-Benz GLB', subtitle: 'شاسی‌بلند کامپکت ۷ نفره', hp: '163 - 306 اسب بخار', accel: '5.2 - 9.1 ثانیه', topSpeed: '207 - 250 ک‌م/س', engineName: '1.3L / 2.0L Turbo', capacity: '1332 - 1991 سی‌سی', cylinders: '4 سیلندر', tank: '52 لیتر', consumption: '7.2 لیتر / 100km', brakesBadge: 'عالی (8/10)', brakesDesc: 'عملکرد مطمئن ترمزها تحت بار کامل.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'پایداری خوب با سیستم چهارچرخ محرک 4MATIC.', comfortBadge: 'عالی (8/10)', comfortDesc: 'سواری نرم و انعطاف‌پذیری بالای صندلی‌ها.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'قابلیت سفارش صندلی‌های ردیف سوم.' },
+                { name: 'Mercedes-Benz GLC', subtitle: 'کراس‌اور متوسط و پرفروش', hp: '204 - 680 اسب بخار', accel: '3.5 - 7.8 ثانیه', topSpeed: '220 - 275 ک‌م/س', engineName: '2.0L Turbo / PHEV', capacity: '1999 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '62 لیتر', consumption: '7.3 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزگیری پرقدرت همراه با بازیابی انرژی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان‌پذیری فوق‌العاده در آنرود و آف‌رود.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'کابین بسیار کم‌صدا و تعلیق بادی نرم.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق عقب ۵۲۰ لیتری و فضای جادار سرنشینان.' },
+                { name: 'Mercedes-Benz GLE', subtitle: 'شاسی‌بلند سایز بزرگ لوکس', hp: '269 - 612 اسب بخار', accel: '3.9 - 6.9 ثانیه', topSpeed: '225 - 280 ک‌م/س', engineName: '2.0L / 3.0L / 4.0L V8', capacity: '1999 - 3982 سی‌سی', cylinders: '4 / 6 / 8 سیلندر', tank: '85 لیتر', consumption: '8.8 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای بسیار قوی برای مهار وزن خودرو.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'سیستم E-ACTIVE BODY CONTROL جهت جلوگیری از غلتیدن بدنه.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'سواری درجه یک لوکس برای مسافرت‌های طولانی.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'فضای کابین بسیار وسیع و بزرگ.' },
+                { name: 'Mercedes-Benz GLS', subtitle: 'S-Class دنیای شاسی‌بلندها', hp: '381 - 612 اسب بخار', accel: '4.2 - 6.1 ثانیه', topSpeed: '240 - 280 ک‌م/س', engineName: '3.0L Turbo / 4.0L V8', capacity: '2999 - 3982 سی‌سی', cylinders: '6 / 8 سیلندر', tank: '90 لیتر', consumption: '9.8 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای عظیم با عملکرد فوق‌العاده.', handlingBadge: 'عالی (8/10)', handlingDesc: 'کنترل عالی بدنه باوجود ابعاد بزرگ.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'سه ردیف صندلی با نهایت راحتی و گرم‌کن/سردکن.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'فضای شاهانه برای ۷ سرنشین بزرگسال.' },
+                { name: 'Mercedes-Benz G-Class', subtitle: 'اسطوره آفرود لوکس جهان', hp: '330 - 585 اسب بخار', accel: '4.5 - 6.4 ثانیه', topSpeed: '210 - 240 ک‌م/س', engineName: '3.0L Diesel / 4.0L V8', capacity: '2989 - 3982 سی‌سی', cylinders: '6 و 8 سیلندر', tank: '100 لیتر', consumption: '12.5 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'سیستم ترمز تقویت‌شده AMG.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'آف‌رود بی‌رقیب، پایداری بهینه‌شده در آنرود.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'ترکیب طراحی کلاسیک با آخرین تکنولوژی لوکس.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'کابین جادار با دید بسیار مسلط به اطراف.' },
+                { name: 'Mercedes-AMG GT', subtitle: 'سوپراسپرت خالص بنز', hp: '476 - 816 اسب بخار', accel: '2.8 - 3.9 ثانیه', topSpeed: '295 - 315 ک‌م/س', engineName: '4.0L V8 Twin-Turbo', capacity: '3982 سی‌سی', cylinders: '8 سیلندر V شکل', tank: '85 لیتر', consumption: '12.8 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ترمزهای سرامیکی AMG فوق‌پیشرفته.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'چسبندگی شگفت‌انگیز و فرمان‌پذیری مسابقه‌ای.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'تعلیق کاملا اسپرت و سفت برای پیست.', spaceBadge: 'محدود (5/10)', spaceDesc: 'کوپه دو نفره با تمرکز بر رانندگی.' },
+                { name: 'Mercedes-AMG SL', subtitle: 'رودستر لوکس و پرقدرت', hp: '381 - 816 اسب بخار', accel: '2.9 - 4.9 ثانیه', topSpeed: '275 - 315 ک‌م/س', engineName: '2.0L Turbo / 4.0L V8', capacity: '1991 - 3982 سی‌سی', cylinders: '4 و 8 سیلندر', tank: '70 لیتر', consumption: '10.5 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'دیسک‌های کربنی با توقف آنی.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'سیستم 4MATIC+ و فرمان چرخ‌های عقب.', comfortBadge: 'عالی (8/10)', comfortDesc: 'سقف پارچه‌ای برقی و گرم‌کن گردن AIRSCARF.', spaceBadge: 'متوسط (6/10)', spaceDesc: 'چیدمان ۲+۲ مناسب مسافرت‌های دو نفره.' },
+                { name: 'Mercedes-AMG ONE', subtitle: 'هایپراسپرت با موتور فرمول یک', hp: '1063 اسب بخار', accel: '2.9 ثانیه', topSpeed: '352 ک‌م/س', engineName: '1.6L V8 Turbo + 4 E-Motors', capacity: '1599 سی‌سی', cylinders: '6 سیلندر F1 Hybrid', tank: '55 لیتر', consumption: '8.7 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'سیستم ترمز مسابقه‌ای فرمول یک.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'آئرودینامیک فعال و چسبندگی بی‌نظیر.', comfortBadge: 'سفت/مسابقه‌ای (4/10)', comfortDesc: 'کابین فیبر کربنی خالص بدون صداگیری.', spaceBadge: 'خیلی محدود (3/10)', spaceDesc: 'فقط برای دو نفر در پیست.' },
+                { name: 'Mercedes-Benz EQA', subtitle: 'کرای‌آور تمام الکتریکی کامپکت', hp: '190 - 292 اسب بخار', accel: '6.0 - 8.6 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'Electric Motor', capacity: '66.5 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 430km', consumption: '15.7 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'بازیابی انرژی ترمز هوشمند پدال.', handlingBadge: 'خوب (8/10)', handlingDesc: 'مرکز ثقل پایین به دلیل باطری‌های کف.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'سکوت مطلق کابین و سواری بسیار نرم.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'فضای جادار سرنشینان در بدنه شاسی‌بلند.' },
+                { name: 'Mercedes-Benz EQB', subtitle: 'شاسی‌بلند الکتریکی ۷ نفره', hp: '228 - 292 اسب بخار', accel: '6.2 - 8.0 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'Dual Electric Motors', capacity: '66.5 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 420km', consumption: '18.1 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزگیری نرم با بازیافت انرژی.', handlingBadge: 'خوب (8/10)', handlingDesc: 'پایداری عالی در پیچ‌ها.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'کابین ساکت و جادار برای خانواده‌ها.', spaceBadge: 'عالی (8.5/10)', spaceDesc: '۳ ردیف صندلی با کاربرد بالا.' },
+                { name: 'Mercedes-Benz EQE', subtitle: 'سدان لوکس الکتریکی آینده‌نگر', hp: '292 - 625 اسب بخار', accel: '3.3 - 6.4 ثانیه', topSpeed: '210 ک‌م/س', engineName: 'Electric Motor(s)', capacity: '90.6 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 610km', consumption: '16.0 kWh/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای پیشرفته الکترونیکی.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'آئرودینامیک شگفت‌انگیز (Cd 0.22).', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'نمایشگر غول‌پیکر Hyperscreen و آرامش محض.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای پای وسیع به لطف پلتفرم برقی.' },
+                { name: 'Mercedes-Benz EQS', subtitle: 'پرچمدار سدان‌های برقی دنیا', hp: '333 - 761 اسب بخار', accel: '3.4 - 6.2 ثانیه', topSpeed: '210 - 250 ک‌م/س', engineName: 'Dual Electric Motors', capacity: '107.8 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 770km', consumption: '17.0 kWh/100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'بهترین بازدهی ترمز هوشمند برقی.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'آئرودینامیک‌ترین خودروی تولیدی جهان (Cd 0.20).', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'فیلتر هوای HEPA و فضاپیما مانند.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'کابین فوق‌العاده کشیده و لوکس.' },
+                { name: 'Mercedes-Maybach', subtitle: 'اوج شکوه و لوکس‌گرایی بنز', hp: '503 - 612 اسب بخار', accel: '4.5 - 4.8 ثانیه', topSpeed: '250 ک‌م/س', engineName: '4.0L V8 / 6.0L V12 Twin-Turbo', capacity: '3982 - 5980 سی‌سی', cylinders: '8 و 12 سیلندر', tank: '76 لیتر', consumption: '10.5 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'توقف آرام و بدون کمترین تکان در کابین.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'حالت رانندگی اختصاصی Maybach برای آرامش سرنشین.', comfortBadge: 'فراتر از استاندارد (10/10)', comfortDesc: 'صندلی‌های فرست‌کلاس هواپیمایی با ماساژور داغ.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'بزرگترین فضای پای سرنشین عقب در میان تمام خودروها.' }
+            ],
+            bmw: [
+                { name: 'BMW 1 Series', subtitle: 'هاچ‌بک اسپرت و چابک', hp: '136 - 306 اسب بخار', accel: '4.8 - 8.9 ثانیه', topSpeed: '213 - 250 ک‌م/س', engineName: '1.5L / 2.0L TwinPower', capacity: '1499 - 1998 سی‌سی', cylinders: '3 و 4 سیلندر', tank: '42 لیتر', consumption: '6.0 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای دیسکی خنک شونده با گیرایی عالی.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'چابکی بی‌نظیر در مانورهای شهری.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'صندلی‌های اسپرت و تنظیمات رانندگی چندگانه.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'مناسب استفاده روزمره و جوانان.' },
+                { name: 'BMW 2 Series (Coupe / Gran Coupe)', subtitle: 'کوپه کامپکت اسپرت', hp: '156 - 374 اسب بخار', accel: '4.3 - 8.7 ثانیه', topSpeed: '224 - 250 ک‌م/س', engineName: '2.0L / 3.0L Turbo', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '52 لیتر', consumption: '6.5 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای قدرتمند M Sport.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'دیفرانسیل عقب با توزیع وزن ۵۰:۵۰.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین راننده‌محور با ارگونومی بالا.', spaceBadge: 'متوسط (6/10)', spaceDesc: 'کوپه اسپرت ۲+۲.' },
+                { name: 'BMW 3 Series', subtitle: 'محبوب‌ترین سدان اسپرت جهان', hp: '156 - 374 اسب بخار', accel: '4.4 - 8.4 ثانیه', topSpeed: '223 - 250 ک‌م/س', engineName: '2.0L / 3.0L TwinPower', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '59 لیتر', consumption: '6.4 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'پاسخ‌دهی پدال ترمز فوق‌العاده دقیق.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'بنچمارک و الگوی هندلینگ در کلاس سدان.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'نمایشگر خمیده Curved Display و تعلیق عالی.', spaceBadge: 'عالی (8/10)', spaceDesc: 'فضای کافی و جادار برای خانواده.' },
+                { name: 'BMW 4 Series', subtitle: 'کوپه، کانورتیبل و گران‌کوپه', hp: '184 - 374 اسب بخار', accel: '4.5 - 7.5 ثانیه', topSpeed: '240 - 250 ک‌م/س', engineName: '2.0L / 3.0L Turbo', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '59 لیتر', consumption: '6.6 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'سیستم ترمز M پرقدرت.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'ارتقای مرکز ثقل پایین‌تر نسبت به سری ۳.', comfortBadge: 'عالی (8/10)', comfortDesc: 'صندلی‌های چرمی لبه‌دار اسپرت.', spaceBadge: 'خوب (7/10)', spaceDesc: 'در نسخه گران‌کوپه بسیار جادار است.' },
+                { name: 'BMW 5 Series', subtitle: 'سدان لوکس و هوشمند', hp: '208 - 601 اسب بخار', accel: '3.8 - 7.5 ثانیه', topSpeed: '230 - 250 ک‌م/س', engineName: '2.0L / 3.0L Mild-Hybrid', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '60 لیتر', consumption: '6.4 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای بسیار هوشمند با قابلیت تعویض خط خودکار.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'سواری نرم همراه با ژن اسپرت بی‌ام‌و.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'قابلیت‌های تعاملی جدید و سکوت عالی کابین.', spaceBadge: 'عالی (9/10)', spaceDesc: 'کابین وسیع و راحتی برای تمام سرنشینان.' },
+                { name: 'BMW 6 Series (Gran Turismo)', subtitle: 'کراس‌اور لیفت‌بک تجاری مسافرتی', hp: '190 - 340 اسب بخار', accel: '5.3 - 7.9 ثانیه', topSpeed: '220 - 250 ک‌م/س', engineName: '2.0L / 3.0L Turbo', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '68 لیتر', consumption: '7.0 لیتر / 100km', brakesBadge: 'عالی (9/10)', brakesDesc: 'عملکرد مطمئن ترمز در سرعت‌های اتوبانی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'پایداری فوق‌العاده در مسافت‌های طولانی.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'تعلیق بادی عقب و راحتی بی‌نظیر.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'صندوق عقب ۶۰۰ لیتری و فضای پای بسیار زیاد.' },
+                { name: 'BMW 7 Series', subtitle: 'سدان فوق لوکس تکنولوژیک', hp: '286 - 544 اسب بخار', accel: '4.6 - 6.7 ثانیه', topSpeed: '250 ک‌م/س', engineName: '3.0L Turbo / 4.4L V8', capacity: '2998 - 4395 سی‌سی', cylinders: '6 و 8 سیلندر', tank: '74 لیتر', consumption: '7.9 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'آخرین تکنولوژی ترمز هوشمند بی‌ام‌و.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'مانورپذیری شگفت‌انگیز باوجود جثه بزرگ.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'نمایشگر ۳۱ اینچی Theatre Screen در عقب.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'قصری متحرک برای سرنشینان عقب.' },
+                { name: 'BMW 8 Series', subtitle: 'سوپر کوپه و کانورتیبل پرچمدار', hp: '333 - 625 اسب بخار', accel: '3.2 - 4.9 ثانیه', topSpeed: '250 - 305 ک‌م/س', engineName: '3.0L Inline-6 / 4.4L V8', capacity: '2998 - 4395 سی‌سی', cylinders: '6 و 8 سیلندر V8', tank: '68 لیتر', consumption: '8.6 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'دیسک‌های سرامیکی M پرقدرت.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'سیستم چهارچرخ محرک xDrive هوشمند.', comfortBadge: 'عالی (9/10)', comfortDesc: 'دسته دنده کریستالی و چرم طبیعی مینو.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'در نسخه گران‌کوپه ۴ در بسیار جادار است.' },
+                { name: 'BMW X1', subtitle: 'کراس‌اور کامپکت لوکس', hp: '150 - 300 اسب بخار', accel: '5.4 - 9.2 ثانیه', topSpeed: '208 - 250 ک‌م/س', engineName: '1.5L / 2.0L TwinPower', capacity: '1499 - 1998 سی‌سی', cylinders: '3 و 4 سیلندر', tank: '45 لیتر', consumption: '6.5 لیتر / 100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'ترمزهای دیسکی با بازخورد خوب پدال.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'بهترین هندلینگ در کلاس کراس‌اورهای کوچک.', comfortBadge: 'عالی (8/10)', comfortDesc: 'صندلی‌های مدرن و طراحی جدید اتاق.', spaceBadge: 'عالی (8/10)', spaceDesc: 'استفاده حداکثری از فضای داخلی.' },
+                { name: 'BMW X2', subtitle: 'کراس‌اور کوپه اسپرت شهری', hp: '170 - 300 اسب بخار', accel: '5.4 - 8.3 ثانیه', topSpeed: '213 - 250 ک‌م/س', engineName: '1.5L / 2.0L Turbo', capacity: '1499 - 1998 سی‌سی', cylinders: '3 و 4 سیلندر', tank: '45 لیتر', consumption: '6.5 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'گیرایی بالای ترمزها.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان‌پذیری دقیق و اسپرت.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'طراحی تهاجمی و صندلی‌های محکم.', spaceBadge: 'متوسط (7/10)', spaceDesc: 'صندوق عقب ۵۶۰ لیتری کاربردی.' },
+                { name: 'BMW X3', subtitle: 'شاسی‌بلند سایز متوسط محبوب', hp: '184 - 360 اسب بخار', accel: '4.8 - 8.4 ثانیه', topSpeed: '215 - 250 ک‌م/س', engineName: '2.0L / 3.0L TwinPower', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '65 لیتر', consumption: '7.6 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'عملکرد ترمز خنک‌شونده عالی.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'تعادل کامل میان خودروی خانوادگی و اسپرت.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'سواری بسیار راحت و کیفی ساخت بالا.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای کافی برای ۵ سرنشین و چمدان‌ها.' },
+                { name: 'BMW X4', subtitle: 'شاسی‌بلند کوپه اسپرت', hp: '184 - 360 اسب بخار', accel: '4.9 - 8.3 ثانیه', topSpeed: '215 - 250 ک‌م/س', engineName: '2.0L / 3.0L Turbo', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '65 لیتر', consumption: '7.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزگیری پرقدرت در سرعت بالایی.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'سیستم تعلیق M Sport به صورت استاندارد.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'کابین اسپرت و آرام.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'طراحی سقف کوپه.' },
+                { name: 'BMW X5', subtitle: 'بنیان‌گذار کلاس SAV لوکس', hp: '298 - 530 اسب بخار', accel: '4.3 - 6.1 ثانیه', topSpeed: '230 - 250 ک‌م/س', engineName: '3.0L Inline-6 / 4.4L V8', capacity: '2998 - 4395 سی‌سی', cylinders: '6 و 8 سیلندر', tank: '83 لیتر', consumption: '8.5 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'قدرت ترمز خیره‌کننده.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'کنترل بدنه فوق‌العاده در پیچ‌های سریع.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'تعلیق بادی و صندلی‌های چندحالته.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'فضای صندوق غول‌پیکر و درب صندوق دو تکه.' },
+                { name: 'BMW X6', subtitle: 'اولین شاسی‌بلند کوپه جهان', hp: '298 - 530 اسب بخار', accel: '4.3 - 6.1 ثانیه', topSpeed: '235 - 250 ک‌م/س', engineName: '3.0L / 4.4L V8 TwinTurbo', capacity: '2998 - 4395 سی‌سی', cylinders: '6 و 8 سیلندر', tank: '83 لیتر', consumption: '8.6 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای دیسکی بزرگ M.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'طراحی تهاجمی همراه با چسبندگی عالی.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'جلوپنجره درخشان Iconic Glow.', spaceBadge: 'عالی (8/10)', spaceDesc: 'کابین جادار و باکیفیت.' },
+                { name: 'BMW X7', subtitle: 'شاسی‌بلند ۷ نفره فوق‌لوکس', hp: '381 - 530 اسب بخار', accel: '4.7 - 5.8 ثانیه', topSpeed: '250 ک‌م/س', engineName: '3.0L Turbo / 4.4L V8', capacity: '2998 - 4395 سی‌سی', cylinders: '6 و 8 سیلندر', tank: '90 لیتر', consumption: '9.6 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'سیستم ترمز پرقدرت کمکی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'سواری استوار و بدون لرزش.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'سقف پانوراما با نورپردازی Sky Lounge.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: '۳ ردیف صندلی برقی جادار.' },
+                { name: 'BMW XM', subtitle: 'ابر شاسی‌بلند اختصاصی M', hp: '653 - 748 اسب بخار', accel: '3.8 - 4.3 ثانیه', topSpeed: '270 - 290 ک‌م/س', engineName: '4.4L V8 Plug-in Hybrid', capacity: '4395 سی‌سی', cylinders: '8 سیلندر V8 + E-Motor', tank: '69 لیتر', consumption: '1.6 لیتر (ترکیبی هیبرید)', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ترمزهای سرامیکی اختصاصی M.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'پایداری عجیب شاسی‌بلند ۲.۷ تنی.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'طراحی کابین M Lounge با سقف سه بعدی.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'فضای بسیار زیاد عقب.' },
+                { name: 'BMW Z4', subtitle: 'رودستر دو نفره اصیل', hp: '197 - 340 اسب بخار', accel: '4.5 - 6.6 ثانیه', topSpeed: '240 - 250 ک‌م/س', engineName: '2.0L / 3.0L TwinPower', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '52 لیتر', consumption: '7.1 لیتر / 100km', brakesBadge: 'عالی (9/10)', brakesDesc: 'ترمزهای M Sport بسیار حساس.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'فرمان‌پذیری خالص رودستر دیفرانسیل عقب.', comfortBadge: 'خوب (8/10)', comfortDesc: 'سقف پارچه‌ای سریع و صندلی‌های چرمی.', spaceBadge: 'محدود (5.5/10)', spaceDesc: 'رودستر دو نفره.' },
+                { name: 'BMW i3', subtitle: 'هاچ‌بک الکتریکی مدرن شهری', hp: '170 - 184 اسب بخار', accel: '6.9 - 7.3 ثانیه', topSpeed: '150 ک‌م/س', engineName: 'Electric Motor', capacity: '42.2 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 260km', consumption: '15.3 kWh/100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'ترمزگیری شتاب منفی تک پدال.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'شاسی فیبر کربنی شگفت‌انگیز.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'طراحی داخلی دوستدار محیط زیست.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'درب‌های عقب کالسکه‌ای.' },
+                { name: 'BMW i4', subtitle: 'گران‌کوپه تمام الکتریکی اسپرت', hp: '286 - 544 اسب بخار', accel: '3.9 - 6.0 ثانیه', topSpeed: '190 - 225 ک‌م/س', engineName: 'eDrive Electric Motor(s)', capacity: '80.7 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 590km', consumption: '16.1 kWh/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'بازیابی انرژی ترمز هوشمند adaptive.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'شتاب‌گیری آنی و پایداری سنگین روی جاده.', comfortBadge: 'عالی (9/10)', comfortDesc: 'صدای اختصاصی هانس زیمر برای شتاب‌گیری.', spaceBadge: 'عالی (8/10)', spaceDesc: 'صندوق عقب لیفت‌بک بسیار کاربردی.' },
+                { name: 'BMW i5', subtitle: 'سدان لوکس الکتریکی جدید', hp: '340 - 601 اسب بخار', accel: '3.8 - 6.0 ثانیه', topSpeed: '193 - 230 ک‌م/س', engineName: 'Electric Motor(s)', capacity: '81.2 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 582km', consumption: '15.9 kWh/100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای الکترونیکی فوق‌پیشرفته.', handlingBadge: 'فوق‌العاده (9.5/10)', handlingDesc: 'تعادل بی‌نظیر وزن با باطری‌های کف.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'نوار تعاملی Interaction Bar روی داشبورد.', spaceBadge: 'عالی (9/10)', spaceDesc: 'کابین وسیع و ارگونومیک.' },
+                { name: 'BMW i7', subtitle: 'پرچمدار لیموزین‌های الکتریکی', hp: '455 - 659 اسب بخار', accel: '3.7 - 5.5 ثانیه', topSpeed: '205 - 250 ک‌م/س', engineName: 'Dual Electric Motors', capacity: '101.7 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 625km', consumption: '18.4 kWh/100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ارام‌ترین و نرم‌ترین ترمزگیری دنیا.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'چسبندگی بالا با سامانه xDrive برقی.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'صندلی‌های Executive Lounge با سینمای اختصاصی.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'فضای شاهانه متحرک.' },
+                { name: 'BMW iX1', subtitle: 'شاسی‌بلند کامپکت برقی', hp: '204 - 313 اسب بخار', accel: '5.6 - 8.6 ثانیه', topSpeed: '170 - 180 ک‌م/س', engineName: 'Electric Motor(s)', capacity: '64.7 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 440km', consumption: '16.8 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'توقف سریع با بازیابی انرژی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان‌پذیری دقیق در شهر.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'سواری نرم و بی‌صدا.', spaceBadge: 'عالی (8/10)', spaceDesc: 'فضای جادار چمدان‌ها.' },
+                { name: 'BMW iX2', subtitle: 'کراس‌اور کوپه برقی اسپرت', hp: '204 - 313 اسب بخار', accel: '5.6 - 8.6 ثانیه', topSpeed: '170 - 180 ک‌م/س', engineName: 'Electric Motor(s)', capacity: '64.8 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 449km', consumption: '16.3 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزگیری مطمئن.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'طراحی اسپرت و هندلینگ چابک.', comfortBadge: 'عالی (8/10)', comfortDesc: 'نمایشگر خمیده لمسی.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'کابین مدرن و جادار.' },
+                { name: 'BMW iX3', subtitle: 'شاسی‌بلند متوسط تمام الکتریکی', hp: '286 اسب بخار', accel: '6.8 ثانیه', topSpeed: '180 ک‌م/س', engineName: 'eDrive Electric Motor', capacity: '80.0 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 460km', consumption: '18.5 kWh/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'سیستم ترمز هوشمند بی‌ام‌و.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'سواری مشابه نسخه‌های بنزینی X3 با مرکز ثقل پایین‌تر.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'کیفیت ساخت درجه یک.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق ۵۱۰ لیتری.' },
+                { name: 'BMW iX', subtitle: 'پرچمدار شاسی‌بلندهای الکتریکی', hp: '326 - 619 اسب بخار', accel: '3.8 - 6.1 ثانیه', topSpeed: '200 - 250 ک‌م/س', engineName: 'Dual Electric Motors', capacity: '76.6 - 111.5 kWh', cylinders: 'برقی', tank: 'پیمایش 630km', consumption: '19.4 kWh/100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'قدرت ترمز خیره‌کننده.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'شاسی آلومینیومی و فیبر کربنی.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'طراحی داخلی مدرن معمارانه و غربیلک فرمان شش‌ضلعی.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'کابین فوق‌العاده باز و تخت.' },
+                { name: 'BMW M2', subtitle: 'کوپه اسپرت خالص خشمگین', hp: '460 اسب بخار', accel: '4.1 ثانیه', topSpeed: '250 - 285 ک‌م/س', engineName: '3.0L Twin-Turbo Inline-6', capacity: '2993 سی‌سی', cylinders: '6 سیلندر خطی M', tank: '52 لیتر', consumption: '9.7 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ترمزهای کالیپر ۶ پیستونه M.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'ماشین دریفت و پیست واقعی.', comfortBadge: 'سفت/اسپرت (6.5/10)', comfortDesc: 'صندلی‌های فیبر کربنی مسابقه‌ای.', spaceBadge: 'محدود (6/10)', spaceDesc: 'کوپه دو در.' },
+                { name: 'BMW M3', subtitle: 'اسطوره سدان‌های مسابقه‌ای خیابانی', hp: '480 - 550 اسب بخار', accel: '3.4 - 4.2 ثانیه', topSpeed: '290 ک‌م/س', engineName: '3.0L M TwinPower Turbo', capacity: '2993 سی‌سی', cylinders: '6 سیلندر', tank: '59 لیتر', consumption: '10.0 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ترمزهای کربن سرامیکی سفارشی.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'فرمان‌پذیری لیزری و پایداری M xDrive.', comfortBadge: 'متوسط (7.5/10)', comfortDesc: 'تنظیمات بی‌نهایت حالت‌های رانندگی.', spaceBadge: 'عالی (8/10)', spaceDesc: 'کاربردی برای استفاده روزمره خانواده.' },
+                { name: 'BMW M4', subtitle: 'کوپه مسابقه‌ای فوق‌پیشرفته', hp: '480 - 550 اسب بخار', accel: '3.5 - 4.2 ثانیه', topSpeed: '290 ک‌م/س', engineName: '3.0L M TwinPower Turbo', capacity: '2993 سی‌سی', cylinders: '6 سیلندر', tank: '59 لیتر', consumption: '10.0 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'قدرت ترمزگیری در سطح خودروهای GT3.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'سقف فیبر کربنی برای کاهش وزن.', comfortBadge: 'متوسط (7.5/10)', comfortDesc: 'طراحی تهاجمی و صندلی‌های محکم.', spaceBadge: 'متوسط (7/10)', spaceDesc: 'کوپه اسپرت جادار.' },
+                { name: 'BMW M5', subtitle: 'سوپراسپرت در لباس سدان', hp: '600 - 727 اسب بخار', accel: '3.4 - 3.5 ثانیه', topSpeed: '305 ک‌م/س', engineName: '4.4L V8 TwinTurbo Hybrid', capacity: '4395 سی‌سی', cylinders: '8 سیلندر V8', tank: '68 لیتر', consumption: '10.5 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'قدرتمندترین سیستم ترمز M.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'قابلیت سوئیچ میان چهارچرخ و دیفرانسیل عقب خالص.', comfortBadge: 'عالی (9/10)', comfortDesc: 'کابین لوکس همراه با هیجان مسابقه.', spaceBadge: 'عالی (9/10)', spaceDesc: 'سدان بزرگ و جادار.' },
+                { name: 'BMW M8', subtitle: 'هیولای جاده‌ها و اتوبان‌ها', hp: '625 اسب بخار', accel: '3.2 ثانیه', topSpeed: '305 ک‌م/س', engineName: '4.4L V8 M TwinPower', capacity: '4395 سی‌سی', cylinders: '8 سیلندر V8', tank: '68 لیتر', consumption: '11.2 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'ترمزهای دیسکی خنک‌شونده بزرگ.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'شتاب‌گیری ویران‌کننده و چسبندگی بی‌نظیر.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'چرم فاخر Merino و عایق‌بندی کامل.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'در نسخه گرند کوپه بسیار جادار.' }
+            ],
+            toyota: [
+                { name: 'Toyota Yaris', subtitle: 'هاچ‌بک و سدان فوق‌العاده کم‌مصرف', hp: '106 - 125 اسب بخار', accel: '9.0 - 11.2 ثانیه', topSpeed: '180 ک‌م/س', engineName: '1.5L Dynamic Force', capacity: '1490 سی‌سی', cylinders: '3 و 4 سیلندر', tank: '42 لیتر', consumption: '4.8 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'ترمزهای ABS + EBD با دوام بسیار بالا.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'دور زدن بسیار آسان در خیابان‌های تنگ.', comfortBadge: 'متوسط (7/10)', comfortDesc: 'کابین ساده، باکیفیت و بی‌دردسر.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'مناسب تردد شهری.' },
+                { name: 'Toyota Corolla', subtitle: 'پرفروش‌ترین خودروی تاریخ بشر', hp: '139 - 169 اسب بخار', accel: '8.2 - 10.2 ثانیه', topSpeed: '195 ک‌م/س', engineName: '1.8L Hybrid / 2.0L', capacity: '1798 - 1987 سی‌سی', cylinders: '4 سیلندر', tank: '50 لیتر', consumption: '4.5 - 6.2 لیتر/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'سیستم ایمنی Toyota Safety Sense.', handlingBadge: 'عالی (8/10)', handlingDesc: 'پلتفرم TNGA با پایداری بسیار بالا.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'استهلاک صفر، سواری نرم و کم‌صدا.', spaceBadge: 'عالی (8/10)', spaceDesc: 'فضای عالی خانواده.' },
+                { name: 'Toyota Corolla Cross', subtitle: 'کراس‌اور اقتصادی و جان‌سخت', hp: '169 - 196 اسب بخار', accel: '7.6 - 9.2 ثانیه', topSpeed: '185 ک‌م/س', engineName: '2.0L Hybrid AWD', capacity: '1987 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '43 لیتر', consumption: '5.0 لیتر / 100km', brakesBadge: 'عالی (8/10)', brakesDesc: 'ترمزگیری هوشمند ترافیک.', handlingBadge: 'خوب (8/10)', handlingDesc: 'ارتفاع مناسب از سطح زمین.', comfortBadge: 'عالی (8/10)', comfortDesc: 'دید عالی راننده و صندلی‌های نرم.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق عقب ۴۳۰ لیتری.' },
+                { name: 'Toyota Camry', subtitle: 'سدان سایز متوسط افسانه‌ای', hp: '203 - 301 اسب بخار', accel: '5.8 - 8.2 ثانیه', topSpeed: '210 ک‌م/س', engineName: '2.5L / 2.5L Hybrid / 3.5L V6', capacity: '2487 - 3456 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '60 لیتر', consumption: '5.2 - 7.5 لیتر/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای دیسکی بزرگ با ایمنی بالا.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'پایداری خارق‌العاده در اتوبان‌ها.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'سواری مبل‌مانند و بسیار آرام.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'فضای پای بی‌نظیر عقب.' },
+                { name: 'Toyota Crown', subtitle: 'سدان کراس لوکس پرچمدار', hp: '236 - 340 اسب بخار', accel: '5.7 - 7.6 ثانیه', topSpeed: '200 ک‌م/س', engineName: '2.4L Turbo Hybrid / 2.5L', capacity: '2393 - 2487 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '55 لیتر', consumption: '5.8 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزگیری بسیار نرم و مطمئن.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'سیستم چهارچرخ محرک E-Four.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'کابین مجلل لوکس و تعلیق تطبیقی.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'راحتی کامل سرنشینان.' },
+                { name: 'Toyota Avalon', subtitle: 'سدان فول‌سایز لوکس', hp: '205 - 301 اسب بخار', accel: '6.0 - 7.8 ثانیه', topSpeed: '210 ک‌م/س', engineName: '2.5L Hybrid / 3.5L V6', capacity: '2487 - 3456 سی‌سی', cylinders: '4 و 6 سیلندر', tank: '60 لیتر', consumption: '6.0 - 8.0 لیتر/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای دیسکی با سیستم کمکی کامل.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'شناوری بسیار نرم روی جاده.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'سیستم صوتی JBL و صندلی‌های چرمی فاخر.', spaceBadge: 'بی‌نظیر (9.5/10)', spaceDesc: 'بزرگترین سدان تویوتا.' },
+                { name: 'Toyota Prius', subtitle: 'پیشگام خودروهای هیبریدی جهان', hp: '194 - 220 اسب بخار', accel: '6.7 - 7.2 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.0L Hybrid / PHEV', capacity: '1987 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '43 لیتر', consumption: '4.1 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'بازیابی انرژی ترمز فوق‌العاده بازده.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'طراحی آئرودینامیک جدید و شتاب عالی.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'طراحی بسیار مدرن و بی‌صدا.', spaceBadge: 'عالی (8/10)', spaceDesc: 'هاچ‌بک جادار و کاربردی.' },
+                { name: 'Toyota Mirai', subtitle: 'خودروی لوکس هیدروژنی آینده', hp: '182 اسب بخار', accel: '9.2 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'Fuel Cell Electric (FCEV)', capacity: '5.6 kg Hydrogen', cylinders: 'پیل سوختی هیدروژن', tank: 'پیمایش 650km', consumption: '0.8 kg/100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای برقی بی‌پایان.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'دیفرانسیل عقب با پلتفرم لكسوس LS.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'خروجی اگزوز فقط آب خالص!', spaceBadge: 'عالی (9/10)', spaceDesc: 'سدان لوکس بزرگ.' },
+                { name: 'Toyota GR86', subtitle: 'کوپه اسپرت سبک‌وزن دیفرانسیل عقب', hp: '228 اسب بخار', accel: '6.1 ثانیه', topSpeed: '226 ک‌م/س', engineName: '2.4L Boxer Engine', capacity: '2387 سی‌سی', cylinders: '4 سیلندر تخت (بوکسر)', tank: '50 لیتر', consumption: '8.8 لیتر / 100km', brakesBadge: 'عالی (9/10)', brakesDesc: 'ترمزهای اسپرت حساس به فشار.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'شاهکار لذت رانندگی و دریفت.', comfortBadge: 'اسپرت (7/10)', comfortDesc: 'کابین ورزشی با صندلی‌های دربرگیرنده.', spaceBadge: 'محدود (5.5/10)', spaceDesc: 'کوپه ۲+۲.' },
+                { name: 'Toyota GR Supra', subtitle: 'سوپراسپرت افسانه‌ای تویوتا', hp: '255 - 382 اسب بخار', accel: '3.9 - 5.0 ثانیه', topSpeed: '250 ک‌م/س', engineName: '2.0L / 3.0L Inline-6 Turbo', capacity: '1998 - 2998 سی‌سی', cylinders: '4 و 6 سیلندر خطی', tank: '52 لیتر', consumption: '7.7 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'کالیپرهای ۴ پیستونه Brembo.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'فرمان‌پذیری بی‌نقص و تقسیم وزن ۵۰:۵۰.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین هیجان‌انگیز خلبانی.', spaceBadge: 'محدود (5/10)', spaceDesc: 'دو نفره خالص.' },
+                { name: 'Toyota GR Yaris', subtitle: 'هاچ‌بک مسابقه‌ای رالی WRC', hp: '261 - 300 اسب بخار', accel: '5.2 ثانیه', topSpeed: '230 ک‌م/س', engineName: '1.6L Turbo 3-Cylinder', capacity: '1618 سی‌سی', cylinders: '3 سیلندر توربو', tank: '50 لیتر', consumption: '8.2 لیتر / 100km', brakesBadge: 'بی‌نظیر (10/10)', brakesDesc: 'دیسک‌های سوراخ‌دار دو تکه.', handlingBadge: 'بی‌نظیر (10/10)', handlingDesc: 'سامانه GR-FOUR چهارچرخ متحرک رالی.', comfortBadge: 'سفت/اسپرت (6.5/10)', comfortDesc: 'تعلیق بسیار سفت پیست.', spaceBadge: 'محدود (5.5/10)', spaceDesc: 'هاچ‌بک کوچک سه در.' },
+                { name: 'Toyota Raize', subtitle: 'کراس‌اور کوچک و اقتصادی شهری', hp: '98 اسب بخار', accel: '11.0 ثانیه', topSpeed: '165 ک‌م/س', engineName: '1.0L Turbo', capacity: '996 سی‌سی', cylinders: '3 سیلندر', tank: '36 لیتر', consumption: '5.4 لیتر / 100km', brakesBadge: 'متوسط (7/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'دور زدن چابک در کوچه و ترافیک.', comfortBadge: 'خوب (7/10)', comfortDesc: 'داشبورد دیجیتال کارآمد.', spaceBadge: 'خوب (7/10)', spaceDesc: 'صندوق ۳۶۹ لیتری مناسب ابعادش.' },
+                { name: 'Toyota Yaris Cross', subtitle: 'کراس‌اور شهری کم‌مصرف', hp: '116 اسب بخار', accel: '11.2 ثانیه', topSpeed: '170 ک‌م/س', engineName: '1.5L Hybrid', capacity: '1490 سی‌سی', cylinders: '3 سیلندر هیبرید', tank: '36 لیتر', consumption: '4.4 لیتر / 100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'سیستم‌های ایمنی فعال کامل.', handlingBadge: 'خوب (8/10)', handlingDesc: 'مانورپذیری بالا و ارتفاع مناسب.', comfortBadge: 'عالی (8/10)', comfortDesc: 'مصرف سوخت جادویی پائین.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'صندوق عقب ۳۹۰ لیتری.' },
+                { name: 'Toyota C-HR', subtitle: 'کراس‌اور فضایی و آینده‌نگر', hp: '122 - 223 اسب بخار', accel: '7.4 - 11.0 ثانیه', topSpeed: '170 - 180 ک‌م/س', engineName: '1.8L / 2.0L Plug-in Hybrid', capacity: '1798 - 1987 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '43 لیتر', consumption: '4.0 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای دیسکی با بازیافت انرژی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان‌پذیری اسپرت و چسبندگی عالی.', comfortBadge: 'عالی (8/10)', comfortDesc: 'کابین خلبانی و صندلی‌های شیک.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'پنجره‌های عقب کوچک اسپرت.' },
+                { name: 'Toyota RAV4', subtitle: 'محبوب‌ترین شاسی‌بلند جهان', hp: '203 - 302 اسب بخار', accel: '5.8 - 8.0 ثانیه', topSpeed: '180 - 200 ک‌م/س', engineName: '2.5L / 2.5L Hybrid / Prime PHEV', capacity: '2487 سی‌سی', cylinders: '4 سیلندر', tank: '55 لیتر', consumption: '5.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزگیری مطمئن در تمام سطوح.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'سیستم Dynamic Torque Vectoring AWD.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'سواری نرم و کابین فوق‌العاده جان‌سخت.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'صندوق عقب ۵۸۰ لیتری.' },
+                { name: 'Toyota Venza', subtitle: 'کراس‌اور لوکس تمام هیبرید', hp: '219 اسب بخار', accel: '7.6 ثانیه', topSpeed: '185 ک‌م/س', engineName: '2.5L Hybrid AWD', capacity: '2487 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '55 لیتر', consumption: '6.0 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'پاسخ‌دهی عالی ترمزها.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'حرکت نرم و بی‌صدا روی جاده.', comfortBadge: 'فوق‌العاده (9.5/10)', comfortDesc: 'سقف شیشه‌ای الکتروکرومیک Star Gaze.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'طراحی داخلی مشابه لکسوس.' },
+                { name: 'Toyota Harrier', subtitle: 'شاسی‌بلند پریمیوم ژاپنی', hp: '218 - 222 اسب بخار', accel: '7.8 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.0L / 2.5L Hybrid', capacity: '1987 - 2487 سی‌سی', cylinders: '4 سیلندر', tank: '55 لیتر', consumption: '5.5 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای دیسکی با ایمنی بالا.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'پایداری بالای شاسی TNGA-K.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'عایق‌بندی صوتی فوق‌العاده و لوکس.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای کابین بسیار راحت.' },
+                { name: 'Toyota Highlander', subtitle: 'شاسی‌بلند ۳ ردیفه خانوادگی', hp: '243 - 265 اسب بخار', accel: '7.2 - 8.0 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.4L Turbo / 2.5L Hybrid', capacity: '2393 - 2487 سی‌سی', cylinders: '4 سیلندر', tank: '68 لیتر', consumption: '6.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای بزرگ برای خودروی ۷ نفره.', handlingBadge: 'عالی (8/10)', handlingDesc: 'کنترل عالی در مسافرت‌های طولانی.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'صندلی‌های کاپیتانی ردیف دوم.', spaceBadge: 'بی‌نظیر (9.5/10)', spaceDesc: 'جایگیری راحت ۷ سرنشین.' },
+                { name: 'Toyota Grand Highlander', subtitle: 'شاسی‌بلند غول‌پیکر خانوادگی', hp: '245 - 362 اسب بخار', accel: '6.3 ثانیه', topSpeed: '190 ک‌م/س', engineName: '2.4L Hybrid MAX / 2.5L', capacity: '2393 سی‌سی', cylinders: '4 سیلندر توربو هیبرید', tank: '65 لیتر', consumption: '8.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'قدرت ترمزگیری سنگین.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'رانندگی بسیار آسان باوجود ابعاد بزرگ.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'کابین با ۱۳ جا لیوانی و درگاه‌های شارژ فراوان.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'فضای بزرگ حتی در ردیف سوم.' },
+                { name: 'Toyota 4Runner', subtitle: 'شاسی‌بلند سرسخت آفرود', hp: '270 - 326 اسب بخار', accel: '6.5 - 7.7 ثانیه', topSpeed: '175 ک‌م/س', engineName: '2.4L Turbo i-FORCE MAX', capacity: '2393 سی‌سی', cylinders: '4 سیلندر توربو هیبرید', tank: '87 لیتر', consumption: '11.0 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای آفرودی مقاوم در برابر حرارت.', handlingBadge: 'عالی (8/10)', handlingDesc: 'عبور از صعب‌العبورترین مسیرهای کوهستانی.', comfortBadge: 'خوب (8/10)', comfortDesc: 'صندلی‌های جاذب ضربه TRD.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'صندوق عقب بزرگ برای تجهیزات کمپینگ.' },
+                { name: 'Toyota Land Cruiser Prado', subtitle: 'اسطوره آفرود و سفر', hp: '204 - 326 اسب بخار', accel: '8.0 - 9.9 ثانیه', topSpeed: '175 ک‌م/س', engineName: '2.8L Turbo Diesel / 2.4L Hybrid', capacity: '2393 - 2755 سی‌سی', cylinders: '4 سیلندر', tank: '110 لیتر', consumption: '8.9 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای دیسکی خنک‌شونده چهار چرخ.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'سیستم قطع میله موج‌گیر SDM.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'سواری بسیار نرم روی شاسی مستقل.', spaceBadge: 'بی‌نظیر (9.5/10)', spaceDesc: 'عرضه در نسخه‌های ۵ و ۷ نفره.' },
+                { name: 'Land Cruiser J100 (اتاق ۱۰ک)', subtitle: 'پرچمدار کلاسیک آفرود (۱۹۹۸-۲۰۰۷)', hp: '230 - 275 اسب بخار', accel: '9.8 - 11.2 ثانیه', topSpeed: '175 ک‌م/س', engineName: '4.5L Inline-6 / 4.7L V8', capacity: '4477 - 4664 سی‌سی', cylinders: '6 خطی / 8 سیلندر V8', tank: '96 + 45 لیتر', consumption: '15.5 لیتر / 100km', brakesBadge: 'متوسط تا خوب (7.5/10)', brakesDesc: 'ترمزهای دیسکی با ماندگاری بالا.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'استقامت شگفت‌انگیز در صحرا.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'کابین بسیار نرم و بی‌صدا برای زمان خود.', spaceBadge: 'فوق‌العاده (9.5/10)', spaceDesc: 'فضای صخره‌ای بزرگ برای بار و سرنشین.' },
+                { name: 'Land Cruiser J200 (اتاق ۲۰۰)', subtitle: 'سلطان جاده‌ها و بیابان‌ها (۲۰۰۷-۲۰۲۱)', hp: '271 - 381 اسب بخار', accel: '8.6 - 9.2 ثانیه', topSpeed: '200 ک‌م/س', engineName: '4.0L V6 / 4.6L / 5.7L V8', capacity: '3956 - 5663 سی‌سی', cylinders: '6 و 8 سیلندر V8', tank: '93 + 45 لیتر', consumption: '13.5 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای multi-terrain ABS.', handlingBadge: 'عالی (8/10)', handlingDesc: 'سیستم Crawl Control و دور زدن درجا.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'یخچال داخلی، کولر دوگانه و سواری مخملی.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: '۸ نفره واقعاً جادار.' },
+                { name: 'Land Cruiser J300 (اتاق ۳۰۰)', subtitle: 'نسل جدید پرچمدار تویوتا', hp: '409 اسب بخار', accel: '6.7 ثانیه', topSpeed: '210 ک‌م/س', engineName: '3.5L V6 Twin-Turbo', capacity: '3445 سی‌سی', cylinders: '6 سیلندر توئین توربو', tank: '110 لیتر', consumption: '9.3 لیتر / 100km', brakesBadge: 'بی‌نظیر (9.5/10)', brakesDesc: 'ترمزهای خنک شونده با بوستر برقی.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'کاهش ۲۰۰ کیلوگرم وزن و تعادل شگفت‌انگیز.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'صفحه نمایش ۱۲.۳ اینچ و صندلی‌های چرم نیمه‌آنیلین.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'لوکس‌ترین و جادارترین لندکروزر تاریخ.' },
+                { name: 'Toyota Sequoia', subtitle: 'غول‌پیگرترین شاسی‌بلند تویوتا', hp: '437 اسب بخار', accel: '5.6 ثانیه', topSpeed: '180 ک‌م/س', engineName: '3.4L V8 Twin-Turbo Hybrid', capacity: '3445 سی‌سی', cylinders: '6 سیلندر هیبرید پرقدرت', tank: '85 لیتر', consumption: '10.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای سنگین ویژه یدک‌کشی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'قدرت کشش ۴.۲ تن بار.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'صندلی‌های ردیف دوم کاپیتانی پادشاهی.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'ابعاد بسیار بزرگ و جادار.' },
+                { name: 'Toyota bZ3', subtitle: 'سدان تمام الکتریکی تویوتا', hp: '184 - 245 اسب بخار', accel: '7.5 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'BYD Blade Electric Motor', capacity: '49.9 - 65.3 kWh', cylinders: 'برقی', tank: 'پیمایش 600km', consumption: '12.0 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزگیری هوشمند بازیافت انرژی.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'آئرودینامیک فوق‌العاده (Cd 0.218).', comfortBadge: 'عالی (9/10)', comfortDesc: 'نمایشگر عمودی بزرگ و کابین مدرن.', spaceBadge: 'عالی (9/10)', spaceDesc: 'فاصله محوری ۲۸۸۰ میلی‌متری جادار.' },
+                { name: 'Toyota bZ4X', subtitle: 'کراس‌اور آینده‌نگر برقی', hp: '201 - 214 اسب بخار', accel: '6.9 - 7.5 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'Electric Motor(s)', capacity: '71.4 kWh Battery', cylinders: 'برقی', tank: 'پیمایش 500km', consumption: '14.8 kWh/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'سیستم ترمز الکترونیکی تک پدال.', handlingBadge: 'فوق‌العاده (8.5/10)', handlingDesc: 'سامانه چهارچرخ متحرک X-MODE سوبارو.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'سقف خورشیدی و فرمان یوک سفارشی.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'کابین پهن و کف کاملاً مسطح.' },
+                { name: 'Toyota Sienna', subtitle: 'مینی‌ون لوکس تمام هیبرید', hp: '245 اسب بخار', accel: '7.7 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.5L Hybrid', capacity: '2487 سی‌سی', cylinders: '4 سیلندر هیبرید', tank: '68 لیتر', consumption: '6.5 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای قابل اعتماد برای خودروی خانوادگی.', handlingBadge: 'عالی (8/10)', handlingDesc: 'رانندگی بسیار آسان و پایداری بالا.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'صندلی‌های ردیف دوم با زیرپایی برقی (Ottoman).', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'بهترین خودرو برای مسافرت‌های ۸ نفره.' },
+                { name: 'Toyota Alphard', subtitle: 'مینی‌ون تشریفاتی فوق‌لوکس', hp: '250 - 279 اسب بخار', accel: '7.3 - 8.2 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.5L Hybrid / 2.4L Turbo', capacity: '2393 - 2487 سی‌سی', cylinders: '4 سیلندر', tank: '60 لیتر', consumption: '5.9 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'توقف آرام تشریفاتی.', handlingBadge: 'عالی (8/10)', handlingDesc: 'سیستم کاهش لرزش بدنه.', comfortBadge: 'فراتر از حد تصور (10/10)', comfortDesc: 'صندلی ماساژور دار فرست‌کلاس جت شخصی.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'لوکس‌ترین مینی‌ون آسیا.' },
+                { name: 'Toyota Vellfire', subtitle: 'نسخه اسپرت و لوکس Alphard', hp: '279 اسب بخار', accel: '7.0 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.4L Turbo / 2.5L Hybrid', capacity: '2393 سی‌سی', cylinders: '4 سیلندر توربو', tank: '60 لیتر', consumption: '6.5 لیتر / 100km', brakesBadge: 'فوق‌العاده (9.5/10)', brakesDesc: 'ترمزهای تقویت‌شده.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'میله‌های تعادل اختصاصی جلو برای رانندگی اسپرت.', comfortBadge: 'بی‌نظیر (10/10)', comfortDesc: 'کابین با نورپردازی ۶۴ رنگ و چرم اعلا.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'فضای فوق‌العاده جادار.' },
+                { name: 'Toyota HiAce', subtitle: 'ون تجاری و مسافربری افسانه‌ای', hp: '151 - 277 اسب بخار', accel: '12.0 - 14.0 ثانیه', topSpeed: '160 ک‌م/س', engineName: '2.8L Turbo Diesel / 3.5L V6', capacity: '2755 - 3456 سی‌سی', cylinders: '4 دیزل / 6 سیلندر', tank: '70 لیتر', consumption: '8.8 لیتر / 100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'ترمزهای با دوام عالی تجاری.', handlingBadge: 'خوب (7/10)', handlingDesc: 'شعاع دور زدن عالی برای ابعاد ون.', comfortBadge: 'متوسط تا خوب (7.5/10)', comfortDesc: 'صندلی‌های بادوام ۱۳ تا ۱۷ نفره.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'حجم فضای بار و مسافر غول‌پیکر.' },
+                { name: 'Toyota Hilux', subtitle: 'جان‌سخت‌ترین وانت پیکاپ دنیا', hp: '147 - 221 اسب بخار', accel: '10.0 - 12.8 ثانیه', topSpeed: '175 ک‌م/س', engineName: '2.4L / 2.8L Turbo Diesel / 2.7L', capacity: '2393 - 2755 سی‌سی', cylinders: '4 سیلندر', tank: '80 لیتر', consumption: '7.8 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای بسیار مقاوم در شرایط سخت آفرود.', handlingBadge: 'خوب (8/10)', handlingDesc: 'توانایی حرکت در عمق ۷۰ سانتی‌متری آب.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین باکیفیت و سیستم صوتی JBL در نسخه GR.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'حمل ۱ تن بار و فضای جادار کابین دبل کابین.' },
+                { name: 'Toyota Tacoma', subtitle: 'پیکاپ سایز متوسط آفرودی', hp: '228 - 326 اسب بخار', accel: '6.8 - 8.2 ثانیه', topSpeed: '180 ک‌م/س', engineName: '2.4L Turbo i-FORCE MAX', capacity: '2393 سی‌سی', cylinders: '4 سیلندر توربو هیبرید', tank: '68 لیتر', consumption: '10.2 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای چهارچرخ دیسکی جدید.', handlingBadge: 'بی‌نظیر (9/10)', handlingDesc: 'سیستم تعلیق آفرود FOX IsoDynamic.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'صندلی‌های بادی جاذب صدمات آفرود.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای بار و کابین بسیار کاربردی.' },
+                { name: 'Toyota Tundra', subtitle: 'پیکاپ غول‌پیکر فول‌سایز', hp: '348 - 437 اسب بخار', accel: '5.7 - 6.5 ثانیه', topSpeed: '180 ک‌م/س', engineName: '3.4L V6 Twin-Turbo Hybrid', capacity: '3445 سی‌سی', cylinders: '6 سیلندر توئین توربو', tank: '122 لیتر', consumption: '11.8 لیتر / 100km', brakesBadge: 'بی‌نظیر (9.5/10)', brakesDesc: 'دیسک‌های ترمز فوق‌العاده بزرگ.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'یدک‌کشی تا ۵ تن بار بدون افت سرعت.', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'نمایشگر ۱۴ اینچ و صندلی‌های چرمی عظیم.', spaceBadge: 'بی‌نظیر (10/10)', spaceDesc: 'کابین غول‌پیکر CrewMax.' }
+            ],
+            ikco: [
+                { name: 'پیکان (Peykan)', subtitle: 'خودروی نوستالژیک ملی', hp: '48 - 60 اسب بخار', accel: '14.5 - 17.0 ثانیه', topSpeed: '140 ک‌م/س', engineName: '1600 OHV', capacity: '1598 سی‌سی', cylinders: '4 سیلندر 8V', tank: '45 لیتر', consumption: '9.5 لیتر / 100km', brakesBadge: 'ضعیف (4/10)', brakesDesc: 'کاسه‌ای در ۴ چرخ یا دیسکی جلو بدون ABS.', handlingBadge: 'ضعیف (4.5/10)', handlingDesc: 'دیفرانسیل عقب با انحراف قسمت عقب در بارندگی.', comfortBadge: 'نوستالژیک (4/10)', comfortDesc: 'فنربندی شمش عقب سخت و کوبنده.', spaceBadge: 'متوسط (6/10)', spaceDesc: 'فضای صمیمی خانواده‌های قدیم.' },
+                { name: 'پژو 405 (GLX / SLX)', subtitle: 'سدان پایه و پرفروش ایران', hp: '100 - 108 اسب بخار', accel: '11.0 - 12.0 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'XU7 / TU5', capacity: '1587 - 1768 سی‌سی', cylinders: '4 سیلندر', tank: '70 لیتر', consumption: '7.5 - 9.0 لیتر/100km', brakesBadge: 'متوسط (6/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب با ABS.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'پایداری خوب در سرعت‌های بالا به لطف شاسی عالی فرانسوی.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'صندلی‌های نسبتاً راحت و کولر مناسب.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق عقب ۴۷۰ لیتری و کابین جادار.' },
+                { name: 'پژو RD / Roa (آردی / روآ)', subtitle: 'بدنه ۴۰۵ با دیفرانسیل پیکان', hp: '80 - 85 اسب بخار', accel: '13.5 - 15.0 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'OHV / OHVG II', capacity: '1598 - 1696 سی‌سی', cylinders: '4 سیلندر', tank: '52 لیتر', consumption: '8.5 لیتر / 100km', brakesBadge: 'ضعیف تا متوسط (5/10)', brakesDesc: 'دیسکی جلو و کاسه‌ای عقب.', handlingBadge: 'متوسط (5.5/10)', handlingDesc: 'دیفرانسیل عقب با دیفرانسیل زوزه کش.', comfortBadge: 'متوسط (5.5/10)', comfortDesc: 'کابین مشابه ۴۰۵ با کمی لرزش.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'کابین جادار سدان.' },
+                { name: 'پژو پارس (سال / LX / ELX)', subtitle: 'سدان محبوب بازار ایران', hp: '100 - 110 اسب بخار', accel: '10.5 - 12.0 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'XU7P / TU5 / XUM', capacity: '1587 - 1905 سی‌سی', cylinders: '4 سیلندر', tank: '66 لیتر', consumption: '7.5 - 9.1 لیتر/100km', brakesBadge: 'خوب (7/10)', brakesDesc: 'دیسکی ۴ چرخ در نسخه‌های ELX و دیسکی/کاسه‌ای.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'فرمان هیدرولیک نرم و پایداری مناسب در سرعت بالا.', comfortBadge: 'خوب (7/10)', comfortDesc: 'تهویه اتوماتیک و صندلی‌های برقی.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای پای عالی سرنشینان عقب.' },
+                { name: 'پژو 206 (تیپ ۲ / ۳ / ۵)', subtitle: 'هاچ‌بک جوان‌پسند و چابک', hp: '75 - 105 اسب بخار', accel: '9.6 - 14.1 ثانیه', topSpeed: '170 - 198 ک‌م/س', engineName: 'TU3 / TU5', capacity: '1360 - 1587 سی‌سی', cylinders: '4 سیلندر', tank: '50 لیتر', consumption: '6.4 - 6.6 لیتر/100km', brakesBadge: 'عالی (8/10)', brakesDesc: 'چهار چرخ دیسکی در تیپ ۵.', handlingBadge: 'خوب (6.5/10)', handlingDesc: 'مانورپذیری شگفت‌انگیز در ترافیک هندلینگ پایین در سرعت بالا به دلیل وزن کم .', comfortBadge: 'متوسط (6/10)', comfortDesc: 'سواری کمی خشک در چاله‌ها.', spaceBadge: 'ضعیف (5.5/10)', spaceDesc: 'فضای صندلی عقب محدود.' },
+                { name: 'پژو 207i (دنده‌ای / اتومات / MC)', subtitle: 'فیس‌لیفت مدرن ۲۰۶ با آپشن بیشتر', hp: '105 - 113 اسب بخار', accel: '10.2 - 12.6 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'TU5 / TU5P', capacity: '1587 سی‌سی', cylinders: '4 سیلندر 16V', tank: '50 لیتر', consumption: '6.6 - 7.1 لیتر/100km', brakesBadge: 'عالی (8/10)', brakesDesc: 'چهار چرخ دیسکی مجهز به ABS, EBD و EBA.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان برقی نرم و کنترل عالی.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'سقف شیشه‌ای پانوراما و کروز کنترل.', spaceBadge: 'ضعیف (5.5/10)', spaceDesc: 'مناسب مجردها یا خانواده دو نفره.' },
+                { name: 'سمند (LX / EF7 / سورن)', subtitle: 'خودروی ملی سنگین و باصلابت', hp: '100 - 115 اسب بخار', accel: '11.5 - 12.5 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'XU7 / EF7', capacity: '1648 - 1768 سی‌سی', cylinders: '4 سیلندر', tank: '66 لیتر', consumption: '7.5 - 8.5 لیتر/100km', brakesBadge: 'متوسط (6.5/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'تعادل عالی در سرعت‌های بالا به دلیل سنگینی بدنه.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'صندلی‌های پهن و راحت جاده‌ای.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق ۵۰۰ لیتری و کابین پهن.' },
+                { name: 'سورن / سورن پلاس', subtitle: 'ارتقای یافته سمند با موتور جدید', hp: '115 - 150 اسب بخار', accel: '9.0 - 11.2 ثانیه', topSpeed: '190 - 205 ک‌م/س', engineName: 'EF7 / EF7 Turbo / XU7P', capacity: '1648 سی‌سی', cylinders: '4 سیلندر 16V', tank: '63 لیتر', consumption: '7.3 - 7.8 لیتر/100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'ترمزهای بهبودیافته دیسکی.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'کنترل مناسب بدنه در اتوبان.', comfortBadge: 'خوب (8/10)', comfortDesc: 'کروز کنترل، تهویه اتوماتیک و گرافیک جدید.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'سدان خانوادگی عالی.' },
+                { name: 'دنا / دنا پلاس (توربو / اتومات)', subtitle: 'پرچمدار سدان‌های ایران‌خودرو', hp: '115 - 150 اسب بخار', accel: '10.0 - 12.0 (توربو: 9.0) ثانیه', topSpeed: '189 - 205 ک‌م/س', engineName: 'EF7 / EF7 TC', capacity: '1648 سی‌سی', cylinders: '4 سیلندر توربوشارژ', tank: '60 لیتر', consumption: '7.4 - 7.9 لیتر/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'چهار چرخ دیسکی با بوستر بزرگتر.', handlingBadge: 'خیلی خوب (8/10)', handlingDesc: 'فرمان برقی بسیار نرم و پایداری سنگین.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'سانروف، صندلی برقی، صوتی جدید و گیربکس ۶ سرعته اتومات.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'صندوق ۵۰۰ لیتری.' },
+                { name: 'رانا / رانا پلاس', subtitle: 'سدان اقتصادی فیس‌لیفت ۲۰۶ صندوق‌دار', hp: '105 - 113 اسب بخار', accel: '11.2 - 12.0 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'TU5 / TU5P 6-Speed', capacity: '1587 سی‌سی', cylinders: '4 سیلندر', tank: '50 لیتر', consumption: '6.9 لیتر / 100km', brakesBadge: 'خوب (7/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای/دیسکی عقب.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'فرمان‌پذیری دقیق در جاده.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'غربیلک جدید طرح ۲۰۷ و دکمه‌های فرمان.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'صندوق ۴۰۰ لیتری و فضای پا متوسط.' },
+                { name: 'تارا (دنده‌ای / اتوماتیک)', subtitle: 'سدان ایمن جدید روی پلتفرم IKP1', hp: '113 اسب بخار', accel: '12.5 - 13.0 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'TU5P CVVT', capacity: '1587 سی‌سی', cylinders: '4 سیلندر 16V', tank: '50 لیتر', consumption: '7.0 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'چهار چرخ دیسکی با کنترل پایداری ESC و ترمز کمکی HSA.', handlingBadge: 'فوق‌العاده (9/10)', handlingDesc: 'بهترین هندلینگ بین تمام خودروهای ایرانی.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'سواری بسار نرم و عایق‌بندی خوب.', spaceBadge: 'بی‌نظیر (9.5/10)', spaceDesc: 'فضای پای فوق‌العاده عقب و صندوق ۶۴۰ لیتری.' },
+                { name: 'ری‌را (Reera)', subtitle: 'اولین کراس‌اور ملی ایران‌خودرو', hp: '160 اسب بخار', accel: '10.4 ثانیه', topSpeed: '195 ک‌م/س', engineName: 'EF7P Turbo (TC7+)', capacity: '1645 سی‌سی', cylinders: '4 سیلندر توربو', tank: '50 لیتر', consumption: '7.3 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمز پارک برقی EPB + AutoHold و ESC کامل.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'هندلینگ مدرن کراس‌اور با فرمان برقی.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'نمایشگر دوگانه سرتاسری، اهرم دنده الکترونیکی و سانروف.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'کابین جادار شاسی‌بلند شهری.' },
+                { name: 'رنو تندر 90 (L90 / اتومات)', subtitle: 'سدان جان‌سخت و کم‌استهلاک', hp: '105 اسب بخار', accel: '10.2 - 11.7 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'Renault K4M', capacity: '1598 سی‌سی', cylinders: '4 سیلندر 16V', tank: '50 لیتر', consumption: '6.9 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب با ABS بوش.', handlingBadge: 'خوب (7/10)', handlingDesc: 'ارتفاع بالا از سطح زمین.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'صندلی‌های معمولی اما کیفیت کیت فنی بی‌نظیر.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'سقف بلند و صندوق عقب ۵۱۰ لیتری.' },
+                { name: 'سوزوکی گراند ویتارا', subtitle: 'شاسی‌بلند ژاپنی تک‌دیفرانسیل و دو دیفرانسیل', hp: '140 - 169 اسب بخار', accel: '11.7 - 12.5 ثانیه', topSpeed: '175 - 185 ک‌م/س', engineName: '2.0L / 2.4L J24B', capacity: '1995 - 2393 سی‌سی', cylinders: '4 سیلندر', tank: '66 لیتر', consumption: '8.9 - 9.9 لیتر/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'چهار چرخ دیسکی تهویه‌شونده.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'سیستم 4WD با دنده کمکی واقعی.', comfortBadge: 'خوب (8/10)', comfortDesc: 'گرم‌کن صندلی، ماساژور راننده و کی‌لس.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای کابین عالی برای آفرود و سفر.' },
+                { name: 'هایما S7 (توربو / پلاس)', subtitle: 'کراس‌اور شاسی‌بلند مونتاژی محبوب', hp: '170 اسب بخار', accel: '9.6 ثانیه', topSpeed: '185 ک‌م/س', engineName: '1.8 Turbo', capacity: '1792 سی‌سی', cylinders: '4 سیلندر توربو', tank: '61 لیتر', consumption: '8.6 لیتر / 100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'ترمزهای دیسکی با سیستم کمکی BAS و ESP.', handlingBadge: 'خیلی خوب (8/10)', handlingDesc: 'سواری نرم و تسلط عالی بر جاده.', comfortBadge: 'فوق‌العاده (9/10)', comfortDesc: 'صندلی چرم، گرم‌کن، دوربین ۳۶۰ درجه.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'کابین وسیع و جادار.' },
+                { name: 'وانت آریسان (۱ و ۲)', subtitle: 'وانت کاربری با موتور ارتقایافته', hp: '86 - 97 اسب بخار', accel: '12.8 - 14.0 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'OHVG II / XU7P', capacity: '1696 - 1761 سی‌سی', cylinders: '4 سیلندر', tank: '52 لیتر گاز/بنزین', consumption: '8.5 لیتر / 100km', brakesBadge: 'متوسط (6/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب همراه ABS.', handlingBadge: 'خوب (6.5/10)', handlingDesc: 'شاسی تقویت‌شده در آریسان ۲ (دیفرانسیل جلو).', comfortBadge: 'خوب (6.5/10)', comfortDesc: 'کولر و سیستم صوتی مناسب وانت.', spaceBadge: 'عالی باری (8.5/10)', spaceDesc: 'تحمل بار تا ۷۵۰ کیلوگرم.' }
+            ],
+            saipa: [
+                { name: 'پراید (۱۱۱، ۱۳۱، ۱۳۲، ۱۴۱، ۱۵۱)', subtitle: 'خانواده پرفروش‌ترین خودروی شهری', hp: '71 اسب بخار', accel: '13.4 - 14.5 ثانیه', topSpeed: '160 ک‌م/س', engineName: 'M13 یورو ۴', capacity: '1323 سی‌سی', cylinders: '4 سیلندر', tank: '37 لیتر', consumption: '6.4 لیتر / 100km', brakesBadge: 'ضعیف (5/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب با ABS پایه.', handlingBadge: 'ضعیف (5/10)', handlingDesc: 'پایداری کم در سرعت‌های بالای ۱۰۰ کیلومتر.', comfortBadge: 'ساده (4.5/10)', comfortDesc: 'صندلی‌های ساده بدون ارگونومی پیچیده.', spaceBadge: 'متوسط (6/10)', spaceDesc: 'صندوق عقب ۳۶۰ لیتری در سدان.' },
+                { name: 'تیبا ۱ و تیبا ۲ (هاچ‌بک)', subtitle: 'خودروی ملی اقتصادی سایپا', hp: '87 اسب بخار', accel: '12.0 - 12.5 ثانیه', topSpeed: '170 ک‌م/س', engineName: 'M15', capacity: '1503 سی‌سی', cylinders: '4 سیلندر 8V', tank: '41 لیتر', consumption: '6.9 لیتر / 100km', brakesBadge: 'متوسط (6/10)', brakesDesc: 'دیسکی جلو و کاسه‌ای عقب مجهز به ABS.', handlingBadge: 'متوسط (6/10)', handlingDesc: 'بهتر از پراید، مناسب برای مسیرهای شهری.', comfortBadge: 'متوسط (6/10)', comfortDesc: 'تهویه دستی با پرتاب باد قوی.', spaceBadge: 'خوب (7/10)', spaceDesc: 'فضای کابین جادارتر از ۲۰۶.' },
+                { name: 'ساینا (دنده‌ای / S / G / اتومات)', subtitle: 'سدان اقتصادی فیس‌لیفت تیبا', hp: '87 اسب بخار', accel: '12.8 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'M15 / M15GSI', capacity: '1503 سی‌سی', cylinders: '4 سیلندر', tank: '41 لیتر', consumption: '7.0 لیتر / 100km', brakesBadge: 'متوسط (6.5/10)', brakesDesc: 'ترمزهای دیسکی جلو و کاسه‌ای عقب.', handlingBadge: 'متوسط (6.5/10)', handlingDesc: 'فرمان هیدرولیک یا برقی نرم در مدل S.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'صفحه کیلومتر جدید و تهویه دیجیتال نیمه‌اتوماتیک.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'فضای مناسب برای خانواده ۴ نفره.' },
+                { name: 'کوییک (دنده‌ای / R / S / اتوماتیک)', subtitle: 'هاچ‌بک کراس محبوب بازار', hp: '87 اسب بخار', accel: '13.0 (اتومات: 13.6) ثانیه', topSpeed: '170 ک‌م/س', engineName: 'M15 1.5L', capacity: '1503 سی‌سی', cylinders: '4 سیلندر', tank: '41 لیتر', consumption: '7.1 - 7.7 لیتر/100km', brakesBadge: 'متوسط (6.5/10)', brakesDesc: 'دیسکی جلو خنک‌شونده، کاسه‌ای عقب با BAS.', handlingBadge: 'متوسط (6.5/10)', handlingDesc: 'ارتفاع مناسب تعلیق در چاله‌های شهری.', comfortBadge: 'خوب (7/10)', comfortDesc: 'فرمان برقی، کی‌لس و مانیتور در نسخه اتوماتیک.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'صندوق ۲۲۵ لیتری هاچ‌بک.' },
+                { name: 'شاهین (دنده‌ای G / اتوماتیک CVT)', subtitle: 'سدان سایز متوسط با شاسی SP100', hp: '110 اسب بخار', accel: '10.8 ثانیه', topSpeed: '190 ک‌م/س', engineName: 'M15TC Turbo', capacity: '1497 سی‌سی', cylinders: '4 سیلندر توربوشارژ', tank: '47 لیتر', consumption: '7.5 لیتر / 100km', brakesBadge: 'فوق‌العاده (8.5/10)', brakesDesc: 'چهار چرخ دیسکی بزرگ با گیرایی فوق‌العاده.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'پایداری چسبنده و عالی در سرپیچ‌ها.', comfortBadge: 'عالی (8/10)', comfortDesc: 'سانروف، استارت دکمه‌ای، نمایشگر و تهویه اتومات.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'فضای پای فوق‌العاده عقب و صندوق ۴۲۰ لیتری.' },
+                { name: 'آریا (Aria)', subtitle: 'کراس‌اور جدید سایپا بر پایه SP100', hp: '147 - 150 اسب بخار', accel: '10.0 ثانیه', topSpeed: '195 ک‌م/س', engineName: '2.0L N/A Direct Injection', capacity: '1999 سی‌سی', cylinders: '4 سیلندر GDI', tank: '50 لیتر', consumption: '7.2 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'چهار چرخ دیسکی مجهز به ESC و TCS.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'شاسی‌بلند شهری با فرمان برقی متغیر.', comfortBadge: 'فوق‌العاده (8.5/10)', comfortDesc: 'داشبورد با متریال نرم، سانروف و نمایشگر بزرگ.', spaceBadge: 'فوق‌العاده (9/10)', spaceDesc: 'کابین جادار و مرتفع.' },
+                { name: 'اطلس (Atlas G / E)', subtitle: 'فیس‌لیفت لوکس کوییک با امکانات جدید', hp: '90 اسب بخار', accel: '12.2 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'M15GSI (VVT)', capacity: '1503 سی‌سی', cylinders: '4 سیلندر با VVT', tank: '41 لیتر', consumption: '6.8 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'مجهز به کنترل پایداری ESC و کمک در سربالایی HSA.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'عایق‌بندی بهتر صدا و فرمان برقی.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'سانروف، آنتن کوسه‌ای، صندلی چرم و پارچه و رادار نقطه کور.', spaceBadge: 'متوسط (6.5/10)', spaceDesc: 'هاچ‌بک کاربردی.' },
+                { name: 'سهند (Sahand)', subtitle: 'سدان جدید سایپا بر پایه پلتفرم X200', hp: '90 اسب بخار', accel: '12.5 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'M15GSI', capacity: '1503 سی‌سی', cylinders: '4 سیلندر VVT', tank: '41 لیتر', consumption: '6.8 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'سیستم ترمز ABS, EBD و سیستم ESC.', handlingBadge: 'خوب (7.5/10)', handlingDesc: 'فرمان‌پذیری نرم‌تر نسبت به ساینا.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'تریم دو رنگ داخلی و طراحی شیک داشبورد.', spaceBadge: 'خوب (7.5/10)', spaceDesc: 'سدان اقتصادی خانواده.' },
+                { name: 'کیا سراتو مونتاژ (۱۶۰۰ / ۲۰۰۰)', subtitle: 'سدان اسپرت کره‌ای مونتاژی سایپا', hp: '124 - 156 اسب بخار', accel: '9.6 - 10.5 ثانیه', topSpeed: '190 - 210 ک‌م/س', engineName: '1.6L / 2.0L Theta II', capacity: '1591 - 1998 سی‌سی', cylinders: '4 سیلندر', tank: '52 لیتر', consumption: '7.1 - 7.8 لیتر/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'چهار چرخ دیسکی مجهز به ABS و EBD.', handlingBadge: 'عالی (8.5/10)', handlingDesc: 'فرمان‌پذیری اسپرت و چسبندگی عالی.', comfortBadge: 'عالی (8/10)', comfortDesc: 'پدال شیفتر پشت فرمان، کی‌لس و سانروف.', spaceBadge: 'عالی (8/10)', spaceDesc: 'کابین جادار و صندوق عقب بزرگ.' },
+                { name: 'کیا پراید (نسیم و صبا - وارداتی/قدیم)', subtitle: 'مدل‌های اولیه کره‌ای پراید', hp: '63 - 71 اسب بخار', accel: '14.5 ثانیه', topSpeed: '155 ک‌م/س', engineName: 'B3 Mazda/Kia', capacity: '1323 سی‌سی', cylinders: '4 سیلندر کاربراتور/انژکتور', tank: '37 لیتر', consumption: '6.8 لیتر / 100km', brakesBadge: 'ضعیف (4.5/10)', brakesDesc: 'دیسکی جلو، کاسه‌ای عقب ساده.', handlingBadge: 'ضعیف (5/10)', handlingDesc: 'بسیار سبک برای تردد شهری.', comfortBadge: 'ساده (4/10)', comfortDesc: 'کابین ساده و بدون پیچیدگی.', spaceBadge: 'متوسط (6/10)', spaceDesc: 'ابعاد بسیار فشرده شهری.' },
+                { name: 'رنو تندر 90 / پارس تندر', subtitle: 'سدان کیفی با طراحی فیس‌لیفت پارس خودرو', hp: '105 اسب بخار', accel: '10.2 ثانیه', topSpeed: '175 ک‌م/س', engineName: 'Renault K4M', capacity: '1598 سی‌سی', cylinders: '4 سیلندر 16V', tank: '50 لیتر', consumption: '6.9 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'ترمزهای با دوام فرانسوی.', handlingBadge: 'خوب (7/10)', handlingDesc: 'تعلیق بسیار مقاوم در برابر چاله‌ها.', comfortBadge: 'متوسط (6.5/10)', comfortDesc: 'استهلاک ناچیز قطعات.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'صندوق بزرگ ۵۱۰ لیتری.' },
+                { name: 'رنو ساندرو / استپ‌وی', subtitle: 'هاچ‌بک و کراس فرانسوی فوق‌العاده باکیفیت', hp: '105 اسب بخار', accel: '10.5 - 11.5 ثانیه', topSpeed: '170 ک‌م/س', engineName: 'K4M Renault', capacity: '1598 سی‌سی', cylinders: '4 سیلندر 16V', tank: '50 لیتر', consumption: '8.0 لیتر / 100km', brakesBadge: 'خوب (8/10)', brakesDesc: 'ترمزهای دیسکی جلو و کاسه‌ای عقب مطمئن.', handlingBadge: 'عالی (8/10)', handlingDesc: 'سواری بسیار نرم‌تر از ۲۰۶.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین بی‌صدا و گیربکس اتوماتیک AL4 بهینه‌شده.', spaceBadge: 'عالی (8/10)', spaceDesc: 'فضای سرنشین عقب جادار.' },
+                { name: 'نیسان جونیور (زامیاد / نیسان آبی)', subtitle: 'وانت باربری سنگین تاریخی', hp: '95 - 100 اسب بخار', accel: '18.0 ثانیه', topSpeed: '130 ک‌م/س', engineName: 'Z24 / Z24i / Diesel', capacity: '2389 سی‌سی', cylinders: '4 سیلندر', tank: '65 لیتر', consumption: '13.0 لیتر / 100km', brakesBadge: 'ضعیف تا متوسط (5/10)', brakesDesc: 'دیسکی جلو (در مدل‌های جدید) و کاسه‌ای عقب.', handlingBadge: 'سخت (4/10)', handlingDesc: 'فرمان هیدرولیک یا مکانیکی سخت تحت بار.', comfortBadge: 'کاربری (3/10)', comfortDesc: 'صندلی‌های ساده یکتکه بدون ارگونومی.', spaceBadge: 'بی‌نظیر باری (10/10)', spaceDesc: 'توانایی جابه‌جایی بار تا ۲.۵ تن!' },
+                { name: 'پادرا / پادرا پلاس', subtitle: 'وانت تجاری فیس‌لیفت نیسان آبی', hp: '95 - 100 اسب بخار', accel: '16.0 ثانیه', topSpeed: '140 ک‌م/س', engineName: 'Z24i', capacity: '2389 سی‌سی', cylinders: '4 سیلندر', tank: '55 لیتر', consumption: '12.0 لیتر / 100km', brakesBadge: 'متوسط (6/10)', brakesDesc: 'ترمز جلو دیسکی تقویت‌شده با ABS.', handlingBadge: 'متوسط (5.5/10)', handlingDesc: 'فرمان هیدرولیک و رانندگی آسان‌تر از نیسان.', comfortBadge: 'خوب تجاری (6/10)', comfortDesc: 'اتاق جدید با کولر، شیشه برقی و صندلی‌های مجزا.', spaceBadge: 'عالی باری (9.5/10)', spaceDesc: 'ظرفیت حمل بار بالا.' },
+                { name: 'زامیاد کارون', subtitle: 'پیکاپ دو کابین کاربری', hp: '94 اسب بخار', accel: '17.0 ثانیه', topSpeed: '135 ک‌م/س', engineName: 'N20 / Z24', capacity: '2389 سی‌سی', cylinders: '4 سیلندر', tank: '55 لیتر', consumption: '12.5 لیتر / 100km', brakesBadge: 'متوسط (6/10)', brakesDesc: 'ترمزهای دیسکی جلو و کاسه‌ای عقب.', handlingBadge: 'متوسط (5.5/10)', handlingDesc: 'فرمان هیدرولیک و شاسی نیسان.', comfortBadge: 'متوسط (5.5/10)', comfortDesc: 'ظرفیت ۶ سرنشین همراه کولر.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای بار و مسافر همزمان.' },
+                { name: 'چنگان CS35 / CS35 پلاس', subtitle: 'کراس‌اور وارداتی و مونتاژی شیک', hp: '123 - 155 اسب بخار', accel: '10.0 - 12.5 ثانیه', topSpeed: '180 ک‌م/س', engineName: '1.6L BlueCore / 1.4L Turbo', capacity: '1392 - 1598 سی‌سی', cylinders: '4 سیلندر', tank: '52 لیتر', consumption: '6.8 - 7.2 لیتر/100km', brakesBadge: 'عالی (8.5/10)', brakesDesc: 'چهار چرخ دیسکی با سیستم کمکی ترمز.', handlingBadge: 'عالی (8/10)', handlingDesc: 'فرمان برقی نرم و سواری خوش‌دست شهری.', comfortBadge: 'فوق‌العاده (8.5/10)', comfortDesc: 'کروز کنترل، سانروف، چرم داخلی و مانیتور.', spaceBadge: 'عالی (8/10)', spaceDesc: 'کابین جادار کراس‌اور.' },
+                { name: 'زوتی Z300 (آریو)', subtitle: 'سدان بزرگ با طرح تویوتا آلیون', hp: '112 اسب بخار', accel: '11.8 - 13.5 ثانیه', topSpeed: '170 ک‌م/س', engineName: '1.6L Mitsubishi 4A92S', capacity: '1590 سی‌سی', cylinders: '4 سیلندر 16V', tank: '55 لیتر', consumption: '6.7 لیتر / 100km', brakesBadge: 'خوب (7.5/10)', brakesDesc: 'چهار چرخ دیسکی همراه با ABS و EBD.', handlingBadge: 'خوب (7/10)', handlingDesc: 'سواری نرم جاده‌ای.', comfortBadge: 'خوب (7.5/10)', comfortDesc: 'کابین بزرگ، صندلی‌های چرمی و تهویه مطبوع.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'فضای پای فوق‌العاده صندلی‌های عقب.' },
+                { name: 'زانتیایی (Xantia)', subtitle: 'سدان فرانسوی فوق‌العاده سریع با تعلیق نوماتیک', hp: '135 اسب بخار', accel: '9.5 ثانیه', topSpeed: '205 ک‌م/س', engineName: '2.0L XU10J4R', capacity: '1998 سی‌سی', cylinders: '4 سیلندر 16V', tank: '65 لیتر', consumption: '9.0 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'ترمزهای هیدرولیکی مجهز به ABS با توقف فوق‌العاده آنی.', handlingBadge: 'بی‌نظیر (9.5/10)', handlingDesc: 'معروف به تعادل روی سه چرخ به لطف تعلیق نیوماتیک!', comfortBadge: 'بی‌نظیر (9.5/10)', comfortDesc: 'تنظیم ارتفاع دستی و اتوماتیک و سواری بی‌نهایت نرم.', spaceBadge: 'عالی (8.5/10)', spaceDesc: 'لیفت‌بک جادار و صندوق وسیع.' },
+                { name: 'سیتروئن C3', subtitle: 'هاچ‌بک داغ اسپرت فرانسوی مونتاژی', hp: '163 اسب بخار', accel: '8.0 ثانیه', topSpeed: '210 ک‌م/س', engineName: '1.6L THP163 Turbo', capacity: '1598 سی‌سی', cylinders: '4 سیلندر توربو (مشترک با ب‌ام‌و)', tank: '45 لیتر', consumption: '6.7 لیتر / 100km', brakesBadge: 'فوق‌العاده (9/10)', brakesDesc: 'چهار چرخ دیسکی خنک‌شونده عالی.', handlingBadge: 'بی‌نظیر (9/10)', handlingDesc: 'شتاب‌گیری فوق‌العاده قوی و چسبندگی بالا.', comfortBadge: 'عالی (8.5/10)', comfortDesc: 'صندلی‌های مبل‌مانند فرانسوی و طراحی برجسته.', spaceBadge: 'خوب (7/10)', spaceDesc: 'هاچ‌بک جادار با صندوق ۳۰۰ لیتری.' }
+            ]
+        };
+
+        let currentStep = 'companies'; 
+        let selectedCompanyKey = null;
+
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                document.body.classList.remove('bg-gray-900', 'text-gray-100');
+                document.body.classList.add('bg-gray-100', 'text-gray-900');
+                icon.className = 'fa-solid fa-sun text-amber-500';
+            } else {
+                html.classList.add('dark');
+                document.body.classList.remove('bg-gray-100', 'text-gray-900');
+                document.body.classList.add('bg-gray-900', 'text-gray-100');
+                icon.className = 'fa-solid fa-moon text-gray-200';
+            }
+        }
+
+        function selectCompany(companyKey) {
+            selectedCompanyKey = companyKey;
+            currentStep = 'car-list';
+            
+            renderCarList(database[companyKey]);
+
+            const companyBadge = document.getElementById('company-name-badge');
+            
+            const badges = {
+                benz: { name: 'مرسدس بنز (Mercedes-Benz)', style: 'bg-cyan-900/60 text-cyan-300 border border-cyan-500/40' },
+                bmw: { name: 'بی‌ام‌و (BMW)', style: 'bg-blue-900/60 text-blue-300 border border-blue-500/40' },
+                toyota: { name: 'تویوتا (Toyota)', style: 'bg-red-900/60 text-red-300 border border-red-500/40' },
+                ikco: { name: 'ایران‌خودرو (IKCO)', style: 'bg-indigo-900/60 text-indigo-300 border border-indigo-500/40' },
+                saipa: { name: 'سایپا (SAIPA)', style: 'bg-orange-900/60 text-orange-300 border border-orange-500/40' }
+            };
+
+            companyBadge.textContent = badges[companyKey].name;
+            companyBadge.className = `text-xs font-bold px-3 py-1 rounded-full ${badges[companyKey].style}`;
+
+            document.getElementById('search-input').value = '';
+            showStep('step-car-list');
+            document.getElementById('btn-back').classList.remove('hidden');
+        }
+
+        function renderCarList(cars) {
+            const container = document.getElementById('cars-container');
+            const countBadge = document.getElementById('car-count');
+            container.innerHTML = '';
+            
+            countBadge.textContent = `${cars.length} مدل خودرو`;
+
+            cars.forEach(car => {
+                const card = document.createElement('div');
+                card.className = `p-3.5 rounded-xl border border-gray-800 bg-gray-800/80 hover:bg-gray-800 hover:border-gray-600 cursor-pointer active:scale-[0.99] transition flex items-center justify-between`;
+                card.onclick = () => showCarDetails(car);
+
+                card.innerHTML = `
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-sm text-white">${car.name}</h4>
+                        <p class="text-xs text-gray-400">${car.subtitle}</p>
+                        <div class="flex items-center gap-2 pt-1">
+                            <span class="text-[10px] bg-gray-900 text-amber-400 px-2 py-0.5 rounded font-medium border border-amber-500/20">⚡ ۰ تا ۱۰۰: ${car.accel}</span>
+                            <span class="text-[10px] bg-gray-900 text-gray-300 px-2 py-0.5 rounded font-medium">${car.hp}</span>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-gray-700/50 text-gray-300 flex items-center justify-center text-xs">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterCars() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const filtered = database[selectedCompanyKey].filter(car => 
+                car.name.toLowerCase().includes(query) || 
+                car.subtitle.toLowerCase().includes(query) ||
+                car.engineName.toLowerCase().includes(query)
+            );
+            renderCarList(filtered);
+        }
+
+        function showCarDetails(car) {
+            currentStep = 'car-details';
+
+            const gradients = {
+                benz: 'from-gray-800 via-gray-900 to-cyan-950 border border-cyan-500/30',
+                bmw: 'from-blue-950 via-gray-900 to-slate-950 border border-blue-500/30',
+                toyota: 'from-red-950 via-gray-900 to-stone-950 border border-red-500/30',
+                ikco: 'from-indigo-950 via-gray-900 to-blue-950 border border-indigo-500/30',
+                saipa: 'from-orange-950 via-gray-900 to-stone-950 border border-orange-500/30'
+            };
+
+            const companyNames = {
+                benz: 'مرسدس بنز',
+                bmw: 'بی‌ام‌و',
+                toyota: 'تویوتا',
+                ikco: 'ایران خودرو',
+                saipa: 'سایپا'
+            };
+
+            const headerCard = document.getElementById('details-header-card');
+            headerCard.className = `rounded-2xl p-5 text-white shadow-lg relative overflow-hidden bg-gradient-to-r ${gradients[selectedCompanyKey]}`;
+
+            document.getElementById('detail-company-tag').textContent = companyNames[selectedCompanyKey];
+            document.getElementById('detail-car-name').textContent = car.name;
+            document.getElementById('detail-car-subtitle').textContent = car.subtitle;
+
+            document.getElementById('spec-accel').textContent = car.accel;
+            document.getElementById('spec-top-speed').textContent = car.topSpeed;
+
+            document.getElementById('spec-hp').textContent = car.hp;
+            document.getElementById('spec-engine-name').textContent = car.engineName;
+            document.getElementById('spec-capacity').textContent = car.capacity;
+            document.getElementById('spec-cylinders').textContent = car.cylinders;
+            document.getElementById('spec-tank').textContent = car.tank;
+            document.getElementById('spec-consumption').textContent = car.consumption;
+
+            document.getElementById('spec-brakes-badge').textContent = car.brakesBadge;
+            document.getElementById('spec-brakes-desc').textContent = car.brakesDesc;
+
+            document.getElementById('spec-handling-badge').textContent = car.handlingBadge;
+            document.getElementById('spec-handling-desc').textContent = car.handlingDesc;
+
+            document.getElementById('spec-comfort-badge').textContent = car.comfortBadge;
+            document.getElementById('spec-comfort-desc').textContent = car.comfortDesc;
+
+            document.getElementById('spec-space-badge').textContent = car.spaceBadge;
+            document.getElementById('spec-space-desc').textContent = car.spaceDesc;
+
+            showStep('step-car-details');
+        }
+
+        function goBack() {
+            if (currentStep === 'car-details') {
+                currentStep = 'car-list';
+                showStep('step-car-list');
+            } else if (currentStep === 'car-list') {
+                currentStep = 'companies';
+                showStep('step-companies');
+                document.getElementById('btn-back').classList.add('hidden');
+            }
+        }
+
+        function showStep(stepId) {
+            document.getElementById('step-companies').classList.add('hidden');
+            document.getElementById('step-car-list').classList.add('hidden');
+            document.getElementById('step-car-details').classList.add('hidden');
+
+            document.getElementById(stepId).classList.remove('hidden');
+            document.getElementById('main-content').scrollTop = 0;
+        }
+    </script>
+</body>
+</html>
